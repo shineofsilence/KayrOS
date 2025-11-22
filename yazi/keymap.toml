@@ -1,0 +1,17 @@
+# Распаковать архив в свою папку
+[[mgr.prepend_keymap]]
+on   = [ "e" ]
+run  = 'shell --confirm "7z x \"$0\""'
+desc = "Распаковать архив здесь"    
+
+# Создать относительную ссылку (обычно то, что нужно)
+[[manager.prepend_keymap]]
+on   = [ "_" ]
+run  = "link" 
+desc = "Создать симлинк (относительный)"
+
+# Начать проигрывание музыки в этой папке
+[[manager.prepend_keymap]]
+on   = [ "P" ]
+run  = 'shell --block "cmus ."'
+desc = "Cmus"
