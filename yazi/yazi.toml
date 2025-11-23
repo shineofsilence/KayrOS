@@ -11,6 +11,7 @@ play = [
 [open]
 rules = [
     # 1. Явные расширения (самый надежный способ)
+    { name = "*.nix",  use = "edit" },
     { name = "*.toml", use = "edit" },
     { name = "*.json", use = "edit" },
     { name = "*.yaml", use = "edit" },
