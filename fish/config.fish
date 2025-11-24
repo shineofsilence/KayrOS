@@ -20,3 +20,4 @@ if test -z "$DISTROBOX_ENTER"; and command -q yazi
     end
 end
 starship init fish | source
+zoxide init fish | source

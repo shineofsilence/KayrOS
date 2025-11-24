@@ -1,70 +1,58 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+# Палитра (для удобства чтения, можно менять тут)
+# MINT_1 = "#c4fff9" (Самый светлый)
+# MINT_2 = "#8afff2" (Средний)
+# MINT_3 = "#4fffd3" (Основной фон директории)
+# SAPLING = "#8fc91e" (Твой зеленый)
+# DARK    = "#1d2230" (Темный фон терминала/текста)
+
 format = """
-[░▒▓](#a3aed2)\
-[  ](bg:#a3aed2 fg:#090c0c)\
-[](bg:#769ff0 fg:#a3aed2)\
+[░](fg:#c4fff9)\
+[▒](fg:#8afff2)\
+[▓](fg:#4fffd3)\
+[ 󰠃 ](bg:#4fffd3 fg:#1d2230)\
 $directory\
-[](fg:#769ff0 bg:#394260)\
+[](fg:#4fffd3 bg:#8fc91e)\
 $git_branch\
 $git_status\
-[](fg:#394260 bg:#212736)\
+[](fg:#8fc91e bg:#1d2230)\
 $nodejs\
 $rust\
 $golang\
 $php\
-[](fg:#212736 bg:#1d2230)\
-$time\
-[ ](fg:#1d2230)\
+[ $time ](bg:#1d2230 fg:#a3aed2)\
+[](fg:#1d2230)\
 \n$character"""
 
+# Настройки модулей, чтобы цвета подхватились правильно
+
 [directory]
-style = "fg:#e3e5e5 bg:#769ff0"
+style = "bg:#4fffd3 fg:#1d2230 bold"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
 
-[directory.substitutions]
-"Documents" = "󰈙 "
-"Downloads" = " "
-"Music" = " "
-"Pictures" = " "
-
 [git_branch]
-symbol = ""
-style = "bg:#394260"
-format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+style = "bg:#8fc91e fg:#1d2230 bold"
+format = "[ $symbol$branch ]($style)"
 
 [git_status]
-style = "bg:#394260"
-format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
-
-[python]
-symbol = "🐍"
-format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
-
-[nodejs]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[rust]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[golang]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
-
-[php]
-symbol = ""
-style = "bg:#212736"
-format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+style = "bg:#8fc91e fg:#1d2230 bold"
+format = "[$all_status$ahead_behind ]($style)"
 
 [time]
 disabled = false
-time_format = "%R" # Hour:Minute Format
-style = "bg:#1d2230"
-format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+time_format = "%R" # 24-hour format
+style = "bg:#1d2230 fg:#a3aed2"
+format = "[[  $time ](bg:#1d2230 fg:#a3aed2)]($style)"
+
+# Языки (чтобы не ломали красоту, если появятся)
+[nodejs]
+style = "bg:#1d2230 fg:#8fc91e"
+format = "[ $symbol($version) ]($style)"
+
+[rust]
+style = "bg:#1d2230 fg:#8fc91e"
+format = "[ $symbol($version) ]($style)"
+
