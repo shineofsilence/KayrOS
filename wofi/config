@@ -1,0 +1,16 @@
+# Команда, очищающая от лишних цветов кожи и сортирующая иконки
+# sh -c "rofimoji --selector wofi --action print --skin-tone light --files emojis math nerd_font | wl-copy -n"
+# Базовые настройки
+mode=dmenu
+show=dmenu
+prompt=Введи название картинки.
+
+# Геометрия
+width=600
+height=400
+location=center
+
+# Поведение
+insensitive=true  # Поиск без учета регистра
+allow_images=true # Если вдруг иконки будут картинками
+  

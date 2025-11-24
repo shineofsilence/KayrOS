@@ -23,6 +23,8 @@ rules = [
     { name = "*.txt",  use = "edit" },
     { name = "*.sh",   use = "edit" },
     { name = "*.zsh",  use = "edit" },
+    { name = "*.css",  use = "edit" },
+    { name = "*", use = "edit" },
 
     # 2. Если расширения нет, проверяем MIME-тип
     { mime = "text/*", use = "edit" },
