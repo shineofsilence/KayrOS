@@ -37,61 +37,57 @@ inactive_text_alpha 0.3
 # ЦВЕТОВАЯ СХЕМА (One Dark Vivid)
 # ==========================================
 # Нейтральный темно-серый фон
-# background #1e2127
-# foreground #abb2bf
-# selection_background #3e4452
-# selection_foreground #abb2bf
-# cursor #528bff
-# cursor_text_color background
+background #1e2127
+foreground #abb2bf
+
+selection_background #3e4452
+selection_foreground #abb2bf
+
+cursor #528bff
+cursor_text_color background
 
 # Рамки
-# active_border_color #61afef
-# inactive_border_color #282c34
+active_border_color #61afef
+inactive_border_color #282c34
 
 # Вкладки
-# active_tab_foreground #282c34
-# active_tab_background #98c379
-# inactive_tab_foreground #abb2bf
-# inactive_tab_background #282c34
+active_tab_foreground #282c34
+active_tab_background #98c379
+inactive_tab_foreground #abb2bf
+inactive_tab_background #282c34
 
 # 16 цветов
 
 # Black (Тот самый нейтральный серый для комментариев)
-# color0 #282c34
-# color8 #5c6370
+color0 #282c34
+color8 #5c6370
 
 # Red
-# color1 #e06c75
-# color9 #e06c75
+color1 #e06c75
+color9 #e06c75
 
 # Green
-# color2 #98c379
-# color10 #98c379
+color2 #98c379
+color10 #98c379
 
 # Yellow
-# color3 #e5c07b
-# color11 #e5c07b
+color3 #e5c07b
+color11 #e5c07b
 
 # Blue
-# color4 #61afef
-# color12 #61afef
+color4 #61afef
+color12 #61afef
 
 # Magenta
-# color5 #c678dd
-# color13 #c678dd
+color5 #c678dd
+color13 #c678dd
 
 # Cyan
-# color6 #56b6c2
-# color14 #56b6c2
+color6 #56b6c2
+color14 #56b6c2
 
 # White
-# color7 #abb2bf
-# color15 #ffffff
+color7 #abb2bf
+color15 #ffffff
 
   
-
-
-# BEGIN_KITTY_THEME
-# Aquarium Dark
-include current-theme.conf
-# END_KITTY_THEME

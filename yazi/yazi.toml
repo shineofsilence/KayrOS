@@ -1,3 +1,5 @@
+[theme]
+flavor = { use = "catppuccin-mocha" }
 [opener]
 edit = [
     { run = 'nvim "$@"', block = true, for = "unix" }
@@ -35,4 +37,9 @@ rules = [
     # Если тип файла video/... -> запускай play
     { mime = "video/*", use = "play" },
     #{ mime = "audio/*", use = "play" },
+]
+[plugin]
+prepend_fetchers = [
+    { id = "git", name = "*", run = "git" },
+    { id = "git", name = "*/", run = "git" }
 ]
