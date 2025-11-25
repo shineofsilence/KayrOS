@@ -3,7 +3,7 @@
 {
   imports =
     [ 
-      # ./hardware-configuration.nix 
+        ./hardware-configuration.nix 
     ];
 
   # =============== Версия системы ==================
@@ -13,8 +13,18 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # ======== Экспериментальные настройки ============
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  
+  # ========== Чистка от старых снимков =============
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   # ==================== Сеть =======================
-  networking.hostName = "kayros-pc"; 
+  networking.hostName = "fighter-name-pc"; 
   networking.networkmanager.enable = true;
 
   # =========== Часовой пояс и локаль ===============
@@ -23,7 +33,7 @@
 
   # ============= Системные пакеты ==================
   environment.systemPackages = with pkgs; [
-    vim            # Простенький vim редактор 
+    vim            # Простенький аварийный vim редактор 
     git            # Система контроля версий
     curl           # Скачивание и запуск скриптов
     wget           # Рекурсивное скачивание, стойкость к обрывам 
@@ -44,24 +54,12 @@
     jack.enable = true;
   };
 
-  # ================== Nvidia =======================
-  # Раскомментировать блок ниже ТОЛЬКО на реальном железе.
-  /*
-  services.xserver.videoDrivers = [ "nvidia" ];
+  # =============== Графика (OpenGL) ================
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
   };
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = false;
-    open = false; # Используем проприетарные драйверы
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
-  */
-
+  
   # =============== Консоль fish ====================
   programs.fish.enable = true;
 
@@ -83,9 +81,9 @@
   programs.virt-manager.enable = true;
 
   # ================ Пользователь ===================
-  users.users.kayros = {
+  users.users.fighter-name = {
     isNormalUser = true;
-    description = "Кайрос";
+    description = "fighter-name";
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "video" "audio" ];
     shell = pkgs.fish;
     };

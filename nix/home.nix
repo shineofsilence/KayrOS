@@ -2,8 +2,8 @@
 
 {
   home.stateVersion = "24.05";
-  home.username = "kayros";
-  home.homeDirectory = "/home/kayros";
+  home.username = "fighter-name";
+  home.homeDirectory = "/home/fighter-name";
 
   # =========== Джентельменский набор приложений =============
   home.packages = with pkgs; [
@@ -11,27 +11,31 @@
     hyprlock         # Экран блокировки
     polkit_gnome     # Форма запроса приложением root-пароля
     waybar           # Статусная строка
-    wl-clipboard     # Общий буфер обмена с консолью
+    hyprpaper        # Обои
     pavucontrol      # Управление звуковыми устройствами
-    wofi             # Лаунчер приложений:
+    rofimoji         # Выбор иконок и эмоджи
+    wofi             # Интерфейс выбора иконок
+    font-awesome     # Шрифты и их иконки
+    wtype            # Чтобы иконка сама вставилась, а не через буфер
     dunst            # Уведомления
-    jq               # Обработка json
     grim             # Скриншоты
     slurp            # Выделение на скриншоте
-    hyprpaper        # Обои
-    font-awesome     # Иконки
-
-    # =========== GUI Приложения ============
     kitty            # Терминал
+    zathura          # Просмотрщик PDF
+    zathura-pdf-mupdf # Движок для PDF
+    imv              # Просмотрщик изображений
     cmus             # Проигрыватель музыки
     mpv              # Проигрыватель видео
-    imv              # Просмотрщик изображений
-    zathura          # Просмотрщик PDF
 
     # ========= Консольные утилиты ==========
     btop             # Монитор системных ресурсов и процессов
     ncdu             # Утилита для чистки дисков
+    wl-clipboard     # Общий буфер обмена с консолью
+    starship         # Fish - Строка ввода
+    eza              # Fish - Настраиваемый ls
+    zoxide           # Fish - Быстрый телепорт по z
     yazi             # Файловый менеджер
+    jq               # JSON процессор
     fd               # Быстрый поиск файлов в yazi
     poppler_utils    # Предпросмотр PDF в yazi
     ffmpegthumbnailer# Предпросмотр видео в yazi
@@ -47,7 +51,7 @@
     gnumake          # Билдер
   ];
 
-  # === Темы GTK (Чтобы софт выглядел красиво) ===
+  # ================ Темы GTK ================
   gtk = {
     enable = true;
     theme.name = "Adwaita-dark";
