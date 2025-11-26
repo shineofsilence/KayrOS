@@ -1,0 +1,3 @@
+#!/bin/sh
+# Включить экспериментальные фичи и запустить флейк
+nix run github:shineofsilence/KayrOS --extra-experimental-features "nix-command flakes"

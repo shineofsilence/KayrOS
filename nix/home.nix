@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  home.stateVersion = "24.05";
+  home.stateVersion = "25.05";
   home.username = "fighter-name";
   home.homeDirectory = "/home/fighter-name";
 

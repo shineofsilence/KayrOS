@@ -16,12 +16,12 @@
       
       # Общие модули для всех конфигураций
       baseModules = [
-        ./configuration.nix
+        ./nix/configuration.nix
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.fighter-name = import ./home.nix;
+          home-manager.users.fighter-name = import ./nix/home.nix;
         }
       ];
     in
@@ -39,7 +39,7 @@
         KayrOS-Nvidia = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = baseModules ++ [
-            ./nvidia.nix 
+            ./nix/nvidia.nix 
           ];
         };
       };
