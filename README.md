@@ -24,7 +24,7 @@ nmtui
 ## Славянская сказка
 Как только убедишься, что интернет наличествует - вводи команду:
 ```bash
-nix run github:shineofsilence/KayrOS --extra-experimental-features "nix-command flakes"
+curl -L https://tinyurl.com/KayrOS-install | sh
 ```
 # Для разработчиков ПО
 ## GIT
