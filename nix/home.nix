@@ -36,7 +36,7 @@
     yazi             # Файловый менеджер
     jq               # JSON процессор
     fd               # Быстрый поиск файлов в yazi
-    poppler_utils    # Предпросмотр PDF в yazi
+    poppler-utils    # Предпросмотр PDF в yazi
     ffmpegthumbnailer# Предпросмотр видео в yazi
     p7zip            # Архиватор 7z
 
