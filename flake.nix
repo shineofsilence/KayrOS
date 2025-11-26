@@ -57,6 +57,7 @@
             pkgs.git 
             pkgs.gum 
             pkgs.nixos-install-tools
+            pkgs.kbd
           ]}:$PATH
 
           bash ${self}/install_KayrOS.sh

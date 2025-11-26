@@ -1,5 +1,7 @@
 #!/bin/sh
-
+# Включаем Кириллицу
+# Подавляем ошибки, если вдруг шрифта нет, чтобы скрипт не упал
+setfont cyr-sun16 >/dev/null 2>&1 || setfont ter-v16n >/dev/null 2>&1
 # Настройки Gum
 export GUM_CONFIRM_FOREGROUND="212"
 export GUM_INPUT_CURSOR_FOREGROUND="212"
@@ -164,6 +166,10 @@ sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $T
 # 3. Генерируем файл конфигурации железа
 nixos-generate-config --root /mnt --show-hardware-config > $TARGET_DIR/hardware-configuration.nix
 
+# 4. Вносим файл в ГИТ сгенерированный файл
+cd $TARGET_DIR
+git add hardware-configuration.nix
+cd - 
 # ================================= 6. УСТАНОВКА ==================================
 echo "Кайрос прыгает в сумку и какое то время размещается в ней с удобством. 🎒"
 sleep 5
