@@ -153,6 +153,8 @@ sleep 5
 # Путь для конфигов
 TARGET_DIR="/mnt/home/$NEW_USER/.config/nixos"
 mkdir -p $TARGET_DIR
+# Путь к папке с nix-конфигами внутри репозитория
+NIX_SUBDIR="$TARGET_DIR/nix"
 
 # Клонируем репозиторий
 git clone https://github.com/shineofsilence/KayrOS.git $TARGET_DIR
@@ -164,15 +166,15 @@ find $TARGET_DIR -name "*.nix" -exec sed -i "s/fighter-name/$NEW_USER/g" {} +
 sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $TARGET_DIR/configuration.nix
 
 # 3. Генерируем файл конфигурации железа
-nixos-generate-config --root /mnt --show-hardware-config > $TARGET_DIR/hardware-configuration.nix
+nixos-generate-config --root /mnt --show-hardware-config > $NIX_SUBDIR/hardware-configuration.nix
 cd $TARGET_DIR
 # 4. Настраиваем временного юзера для Git
 git config user.email "installer@kayros.local"
 git config user.name "KayrOS Installer"
 # 2. Принудительно добавляем файл (даже если он в игноре)
-git add -f hardware-configuration.nix
+git add .
 # 3. Делаем коммит.
-git commit -m "chore: auto-generated hardware config" --allow-empty
+git commit -m "chore: install KayrOS" --allow-empty
 cd -
 # ================================= 6. УСТАНОВКА ==================================
 echo "Кайрос прыгает в сумку и какое то время размещается в ней с удобством. 🎒"
