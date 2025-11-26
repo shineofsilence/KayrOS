@@ -165,11 +165,15 @@ sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $T
 
 # 3. Генерируем файл конфигурации железа
 nixos-generate-config --root /mnt --show-hardware-config > $TARGET_DIR/hardware-configuration.nix
-
-# 4. Вносим файл в ГИТ сгенерированный файл
 cd $TARGET_DIR
-git add hardware-configuration.nix
-cd - 
+# 4. Настраиваем временного юзера для Git
+git config user.email "installer@kayros.local"
+git config user.name "KayrOS Installer"
+# 2. Принудительно добавляем файл (даже если он в игноре)
+git add -f hardware-configuration.nix
+# 3. Делаем коммит.
+git commit -m "chore: auto-generated hardware config" --allow-empty
+cd -
 # ================================= 6. УСТАНОВКА ==================================
 echo "Кайрос прыгает в сумку и какое то время размещается в ней с удобством. 🎒"
 sleep 5
