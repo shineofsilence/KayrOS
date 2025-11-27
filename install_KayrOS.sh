@@ -89,7 +89,7 @@ mkdir -p /mnt/boot
 mount -o subvol=@home,$OPTS $MAIN_PART /mnt/home
 
 # Монтируем загрузчик
-mount $BOOT_PART /mnt/boot
+mount -o umask=0077 $BOOT_PART /mnt/boot
 
 # ==================== 4. МОНТИРОВАНИЕ ДОПОЛНИТЕЛЬНЫХ ДИСКОВ ========================
 echo "🧝🏻 'Слушай, а давай ка я другие твои сумки к себе поближе подвину.'"
@@ -163,7 +163,7 @@ git clone https://github.com/shineofsilence/KayrOS.git $TARGET_DIR
 find $TARGET_DIR -name "*.nix" -exec sed -i "s/fighter-name/$NEW_USER/g" {} +
 
 # 2. Прописываем пароль
-sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $TARGET_DIR/configuration.nix
+sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $NIX_SUBDIR/configuration.nix
 
 # 3. Генерируем файл конфигурации железа
 nixos-generate-config --root /mnt --show-hardware-config > $NIX_SUBDIR/hardware-configuration.nix
