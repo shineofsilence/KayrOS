@@ -46,8 +46,7 @@ curl -I google.com
 ## Славянская сказка
 Как только убедишься, что интернет наличествует - вводи команду:
 ```bash
-curl -L https://raw.githubusercontent.com/shineofsilence/KayrOS/refs/heads/main/get | sh
-curl -L https://tinyurl.com/KayrOS-install | sh
+curl -L https://bit.ly/KayrOS-install | sh
 ```
 # Для разработчиков ПО
 ## GIT
