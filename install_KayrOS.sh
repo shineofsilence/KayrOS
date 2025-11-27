@@ -151,7 +151,7 @@ echo "Кайрос смотрит свои записи и мысленно на
 sleep 5
 
 # Путь для конфигов
-TARGET_DIR="/mnt/home/$NEW_USER/.config/nixos"
+TARGET_DIR="/mnt/home/$NEW_USER/.config"
 mkdir -p $TARGET_DIR
 # Путь к папке с nix-конфигами внутри репозитория
 NIX_SUBDIR="$TARGET_DIR/nix"
