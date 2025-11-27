@@ -16,12 +16,6 @@
   # ======== Экспериментальные настройки ============
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # ==================== Кэши =======================
-  substituters = [
-      "https://cache.nixos.org"
-      "https://hyprland.cachix.org"
-    ]; 
-
   # ========== Чистка от старых снимков =============
   nix.gc = {
     automatic = true;
