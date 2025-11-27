@@ -18,18 +18,6 @@
   nix.settings = {
     # Включаем флейки
     experimental-features = [ "nix-command" "flakes" ];
-    
-    # Подключаем кэши (откуда качать бинарники)
-    substituters = [
-      "https://cache.nixos.org"
-      "https://hyprland.cachix.org"
-    ];
-    
-    # Ключи подписи (чтобы доверять этим кэшам)
-    trusted-public-keys = [
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-      "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
-    ];
   };
   # ========== Чистка от старых снимков =============
   nix.gc = {
