@@ -12,18 +12,18 @@ RESET_STYLE="\033[0m"
 TALE_STYLE="\033[32m"
 KAYROS_NAME="\033[37m"
 KAYROS_SPEECH="\033[3;36m"
-echo "${TALE_STYLE}Ты встречаешь маленького светловолосого эльфа.${RESET_STYLE}"
+echo -e "${TALE_STYLE}Ты встречаешь маленького светловолосого эльфа.${RESET_STYLE}"
 echo ""
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Меня зовут Кайрос. Я принесу тебе удачу, если ты возьмёшь меня с собой!${RESET_STYLE}"
-echo ""
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Меня зовут Кайрос. Я принесу тебе удачу, если ты возьмёшь меня с собой!${RESET_STYLE}"
+echo -e ""
 
 # Данные пользователя
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Каково твоё имя, воин? ${TALE_STYLE}(увы, пока что латиницей)${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Каково твоё имя, воин? ${TALE_STYLE}(увы, пока что латиницей)${RESET_STYLE}"
 NEW_USER=$(gum input --placeholder "user")
 [ -z "$NEW_USER" ] && exit 1
 
 # Пароль пользователя
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Хорошо, $NEW_USER. Тайное слово какое загадаешь? ${TALE_STYLE}(увы, опять)${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Хорошо, $NEW_USER. Тайное слово какое загадаешь? ${TALE_STYLE}(увы, опять)${RESET_STYLE}"
 NEW_PASS=$(gum input --password --placeholder "password")
 [ -z "$NEW_PASS" ] && exit 1
 
@@ -31,15 +31,15 @@ NEW_PASS=$(gum input --password --placeholder "password")
 PASS_HASH=$(mkpasswd -m sha-512 "$NEW_PASS")
 
 # Выбор диска для установки
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Выбери рюкзак, вещей в коем не жалко: всё повыбрасываю да сам в него залезу.${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Выбери рюкзак, вещей в коем не жалко: всё повыбрасываю да сам в него залезу.${RESET_STYLE}"
 DISK=$(lsblk -d -n -o NAME,SIZE,MODEL | gum choose | awk '{print $1}')
 [ -z "$DISK" ] && exit 1
 
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты занятный. Все обычно про свои рюкзаки говорят: вон тот кожанный.${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты занятный. Все обычно про свои рюкзаки говорят: вон тот кожанный.${RESET_STYLE}"
 gum confirm "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
 
 # ============================== 2. РАЗМЕТКА ДИСКА =================================
-echo "${TALE_STYLE}Кайрос хохочет и выбрасывает из него вещи.${RESET_STYLE}"
+echo -e "${TALE_STYLE}Кайрос хохочет и выбрасывает из него вещи.${RESET_STYLE}"
 sleep 3
 
 # Определяем префикс (nvme0n1p1 vs sda1)
@@ -65,7 +65,7 @@ mkfs.fat -F 32 -n boot $BOOT_PART
 mkfs.btrfs -f -L main $MAIN_PART
 
 # ====================== 3. МОНТИРОВАНИЕ ОСНОВНОГО ДИСКА ==========================
-echo "${TALE_STYLE}Кайрос готовит себе удобное место.${RESET_STYLE}"
+echo -e "${TALE_STYLE}Кайрос готовит себе удобное место.${RESET_STYLE}"
 sleep 3
 
 # Монтируем корень временно
@@ -149,7 +149,7 @@ lsblk -rn -o NAME,TYPE,FSTYPE,PKNAME,LABEL | while read -r DEV_NAME DEV_TYPE DEV
 done
 
 # ======================== 5. КЛОНИРОВАНИЕ И НАСТРОЙКА =============================
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Добро. Дай я только гляну в дневник свой напоследок.${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Добро. Дай я только гляну в дневник свой напоследок.${RESET_STYLE}"
 sleep 5
 
 # Путь для конфигов
@@ -179,8 +179,8 @@ git add .
 git commit -m "chore: install KayrOS" --allow-empty
 cd -
 # ================================= 6. УСТАНОВКА ==================================
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Ну понеслась! Ты если что извини, у меня не всегда с первого раза выходит.${RESET_STYLE}"
-echo "${TALE_STYLE}Кайрос прыгает в рюкзак и какое то время размещается в нём с удобством.${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Ну понеслась! Ты если что извини, у меня не всегда с первого раза выходит.${RESET_STYLE}"
+echo -e "${TALE_STYLE}Кайрос прыгает в рюкзак и какое то время размещается в нём с удобством.${RESET_STYLE}"
 
 sleep 5
 
@@ -197,8 +197,8 @@ nixos-install --flake "$TARGET_DIR#$FLAKE_NAME" --no-root-passwd
 chown -R 1000:100 /mnt/home/$NEW_USER
 
 # =============================== 7. ЗАВЕРШЕНИЕ ==================================
-echo "${TALE_STYLE}Кайрос наконец то обустроился и ехидно выглядывает.${RESET_STYLE}"
-echo "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А тут удобно. Слушай, ты наверное истомился ожидая. Давай-ка я тебе быстрый сон устрою. Ты же не против?${RESET_STYLE}"
+echo -e "${TALE_STYLE}Кайрос наконец то обустроился и ехидно выглядывает.${RESET_STYLE}"
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А тут удобно. Слушай, ты наверное истомился ожидая. Давай-ка я тебе быстрый сон устрою. Ты же не против?${RESET_STYLE}"
 
 # Иллюзия выбора: оба варианта ведут к одному исходу
 gum choose "Да, не против." "Нет, не против."
