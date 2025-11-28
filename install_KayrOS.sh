@@ -204,7 +204,7 @@ nix flake update --extra-experimental-features "nix-command flakes"
 cd -
 
 # Устанавливаем с выбранным именем флейка
-nixos-install --flake "$TARGET_DIR#$FLAKE_NAME" --no-root-passwd
+nixos-install --flake "$TARGET_DIR#$FLAKE_NAME" --no-root-passwd --no-update-lock-file
 
 # Чиним права доступа на домашнюю папку
 chown -R 1000:100 /mnt/home/$NEW_USER
