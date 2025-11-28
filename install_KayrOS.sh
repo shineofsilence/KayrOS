@@ -38,7 +38,8 @@ DISK=$(lsblk -d -n -o NAME,SIZE,MODEL | gum choose | awk '{print $1}')
 echo ""
 
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты занятный. Все обычно про свои рюкзаки говорят: вон тот кожанный.${RESET_STYLE}"
-gum confirm "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
+echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}"
+gum confirm "" || exit 1
 echo ""
 
 # ============================== 2. РАЗМЕТКА ДИСКА =================================
@@ -152,6 +153,7 @@ lsblk -rn -o NAME,TYPE,FSTYPE,PKNAME,LABEL | while read -r DEV_NAME DEV_TYPE DEV
     chown 1000:100 "$ACTUAL_PATH"
     chown -h 1000:100 "$USER_LINK"
 done
+echo ""
 
 # ======================== 5. КЛОНИРОВАНИЕ И НАСТРОЙКА =============================
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Добро. Дай я только гляну в дневник свой напоследок.${RESET_STYLE}"
@@ -184,6 +186,7 @@ git add .
 # 3. Делаем коммит.
 git commit -m "chore: install KayrOS" --allow-empty
 cd -
+echo ""
 # ================================= 6. УСТАНОВКА ==================================
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Ну понеслась! Ты если что извини, у меня не всегда с первого раза выходит.${RESET_STYLE}"
 echo -e "${TALE_STYLE}Кайрос прыгает в рюкзак и какое то время размещается в нём с удобством.${RESET_STYLE}"
