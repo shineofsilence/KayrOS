@@ -21,11 +21,12 @@ echo -e ""
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Каково твоё имя, воин? ${TALE_STYLE}(увы, пока что латиницей)${RESET_STYLE}"
 NEW_USER=$(gum input --placeholder "user")
 [ -z "$NEW_USER" ] && exit 1
-
+echo ""
 # Пароль пользователя
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Хорошо, $NEW_USER. Тайное слово какое загадаешь? ${TALE_STYLE}(увы, опять)${RESET_STYLE}"
 NEW_PASS=$(gum input --password --placeholder "password")
 [ -z "$NEW_PASS" ] && exit 1
+echo ""
 
 # Генерируем хэш пароля
 PASS_HASH=$(mkpasswd -m sha-512 "$NEW_PASS")
@@ -34,12 +35,15 @@ PASS_HASH=$(mkpasswd -m sha-512 "$NEW_PASS")
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Выбери рюкзак, вещей в коем не жалко: всё повыбрасываю да сам в него залезу.${RESET_STYLE}"
 DISK=$(lsblk -d -n -o NAME,SIZE,MODEL | gum choose | awk '{print $1}')
 [ -z "$DISK" ] && exit 1
+echo ""
 
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты занятный. Все обычно про свои рюкзаки говорят: вон тот кожанный.${RESET_STYLE}"
-gum confirm -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
+gum confirm "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
+echo ""
 
 # ============================== 2. РАЗМЕТКА ДИСКА =================================
 echo -e "${TALE_STYLE}Кайрос хохочет и выбрасывает из него вещи.${RESET_STYLE}"
+echo ""
 sleep 3
 
 # Определяем префикс (nvme0n1p1 vs sda1)
@@ -66,6 +70,7 @@ mkfs.btrfs -f -L main $MAIN_PART
 
 # ====================== 3. МОНТИРОВАНИЕ ОСНОВНОГО ДИСКА ==========================
 echo -e "${TALE_STYLE}Кайрос готовит себе удобное место.${RESET_STYLE}"
+echo ""
 sleep 3
 
 # Монтируем корень временно
@@ -150,7 +155,8 @@ done
 
 # ======================== 5. КЛОНИРОВАНИЕ И НАСТРОЙКА =============================
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Добро. Дай я только гляну в дневник свой напоследок.${RESET_STYLE}"
-sleep 5
+echo ""
+sleep 3
 
 # Путь для конфигов
 TARGET_DIR="/mnt/home/$NEW_USER/.config"
@@ -181,8 +187,8 @@ cd -
 # ================================= 6. УСТАНОВКА ==================================
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Ну понеслась! Ты если что извини, у меня не всегда с первого раза выходит.${RESET_STYLE}"
 echo -e "${TALE_STYLE}Кайрос прыгает в рюкзак и какое то время размещается в нём с удобством.${RESET_STYLE}"
-
-sleep 5
+echo ""
+sleep 3
 
 if lspci | grep -i "nvidia" > /dev/null; then
     FLAKE_NAME="KayrOS-Nvidia"
