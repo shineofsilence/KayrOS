@@ -200,7 +200,7 @@ else
 fi
 
 cd $TARGET_DIR
-nix flake update
+nix flake update --extra-experimental-features "nix-command flakes"
 cd -
 
 # Устанавливаем с выбранным именем флейка
