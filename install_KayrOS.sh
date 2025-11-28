@@ -10,7 +10,7 @@ export GUM_INPUT_CURSOR_FOREGROUND="212"
 gum style --border double --margin "1 1" --padding "1 2" --border-foreground 212 "✨✨✨ Славянская сказка со счастливым началом. ✨✨✨"
 RESET_STYLE="\033[0m"
 TALE_STYLE="\033[32m"
-KAYROS_NAME="\033[33m"
+KAYROS_NAME="\033[35m"
 KAYROS_SPEECH="\033[36m"
 echo -e "${TALE_STYLE}Ты встречаешь маленького светловолосого эльфа.${RESET_STYLE}"
 echo ""
@@ -198,6 +198,10 @@ if lspci | grep -i "nvidia" > /dev/null; then
 else
     FLAKE_NAME="KayrOS-Main"
 fi
+
+cd $TARGET_DIR
+nix flake update
+cd -
 
 # Устанавливаем с выбранным именем флейка
 nixos-install --flake "$TARGET_DIR#$FLAKE_NAME" --no-root-passwd
