@@ -177,15 +177,6 @@ sed -i "/isNormalUser = true;/a \    initialHashedPassword = \"$PASS_HASH\";" $N
 
 # 3. Генерируем файл конфигурации железа
 nixos-generate-config --root /mnt --show-hardware-config > $NIX_SUBDIR/hardware-configuration.nix
-cd $TARGET_DIR
-# 4. Настраиваем временного юзера для Git
-git config user.email "installer@kayros.local"
-git config user.name "KayrOS Installer"
-# 2. Принудительно добавляем файл (даже если он в игноре)
-git add .
-# 3. Делаем коммит.
-git commit -m "chore: install KayrOS" --allow-empty
-cd -
 echo ""
 # ================================= 6. УСТАНОВКА ==================================
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Ну понеслась! Ты если что извини, у меня не всегда с первого раза выходит.${RESET_STYLE}"
@@ -201,6 +192,14 @@ fi
 
 cd $TARGET_DIR
 nix flake update --extra-experimental-features "nix-command flakes"
+
+# 4. Настраиваем временного юзера для Git
+git config user.email "installer@kayros.local"
+git config user.name "KayrOS Installer"
+# 2. Принудительно добавляем файл (даже если он в игноре)
+git add .
+# 3. Делаем коммит.
+git commit -m "chore: install KayrOS" --allow-empty
 cd -
 
 # Устанавливаем с выбранным именем флейка
