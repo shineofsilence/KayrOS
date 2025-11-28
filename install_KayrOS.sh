@@ -11,7 +11,7 @@ gum style --border double --margin "1 1" --padding "1 2" --border-foreground 212
 RESET_STYLE="\033[0m"
 TALE_STYLE="\033[32m"
 KAYROS_NAME="\033[37m"
-KAYROS_SPEECH="\033[3;36m"
+KAYROS_SPEECH="\033[36m"
 echo -e "${TALE_STYLE}Ты встречаешь маленького светловолосого эльфа.${RESET_STYLE}"
 echo ""
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}Меня зовут Кайрос. Я принесу тебе удачу, если ты возьмёшь меня с собой!${RESET_STYLE}"
@@ -36,7 +36,7 @@ DISK=$(lsblk -d -n -o NAME,SIZE,MODEL | gum choose | awk '{print $1}')
 [ -z "$DISK" ] && exit 1
 
 echo -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты занятный. Все обычно про свои рюкзаки говорят: вон тот кожанный.${RESET_STYLE}"
-gum confirm "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
+gum confirm -e "${KAYROS_NAME}Кайрос: ${KAYROS_SPEECH}А ты свой /dev/$DISK назвал? Ну ладно, но Я ж не шучу, всё из него выброшу. Уверен?${RESET_STYLE}" || exit 1
 
 # ============================== 2. РАЗМЕТКА ДИСКА =================================
 echo -e "${TALE_STYLE}Кайрос хохочет и выбрасывает из него вещи.${RESET_STYLE}"
