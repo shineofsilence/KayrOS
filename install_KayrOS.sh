@@ -191,7 +191,6 @@ else
 fi
 
 cd $TARGET_DIR
-nix flake update --extra-experimental-features "nix-command flakes"
 
 # 4. Настраиваем временного юзера для Git
 git config user.email "installer@kayros.local"
@@ -199,7 +198,12 @@ git config user.name "KayrOS Installer"
 # 2. Принудительно добавляем файл (даже если он в игноре)
 git add .
 # 3. Делаем коммит.
-git commit -m "chore: install KayrOS" --allow-empty
+git commit -m "Внесение перед генерацией лок-файла" --allow-empty
+nix flake update --extra-experimental-features "nix-command flakes"
+# 2. Принудительно добавляем файл (даже если он в игноре)
+git add .
+# 3. Делаем коммит.
+git commit -m "Финальное внесение перед установкой" --allow-empty
 cd -
 
 # Устанавливаем с выбранным именем флейка
