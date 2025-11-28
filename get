@@ -1,4 +1,4 @@
 #!/bin/sh
 # Запускаем флейк.
-# nix run --extra-experimental-features "nix-command flakes" --no-write-lock-file github:shineofsilence/KayrOS
-nix run --extra-experimental-features "nix-command flakes" github:shineofsilence/KayrOS
+nix run --extra-experimental-features "nix-command flakes" --no-write-lock-file github:shineofsilence/KayrOS
+# nix run --extra-experimental-features "nix-command flakes" github:shineofsilence/KayrOS
