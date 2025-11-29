@@ -2,8 +2,8 @@
 
 {
   home.stateVersion = "25.11";
-  home.username = "fighter-name";
-  home.homeDirectory = "/home/fighter-name";
+  home.username = "kayros";
+  home.homeDirectory = "/home/kayros";
 
   # =========== Джентельменский набор приложений =============
   home.packages = with pkgs; [

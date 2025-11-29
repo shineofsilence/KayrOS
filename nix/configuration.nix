@@ -100,11 +100,15 @@
   virtualisation.podman.enable = true; 
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
+  # Включаем QEMU Guest Agent (для правильного выключения и инфо о системе)
+  services.qemuGuest.enable = true;
+  # Включаем SPICE Agent (Буфер обмена и авто-разрешение экрана)
+  services.spice-vdagentd.enable = true;
 
   # ================ Пользователь ===================
-  users.users.fighter-name = {
+  users.users.kayros = {
     isNormalUser = true;
-    description = "fighter-name";
+    description = "kayros";
     extraGroups = [ "networkmanager" "wheel" "libvirtd" "video" "audio" ];
     shell = pkgs.fish;
     };
