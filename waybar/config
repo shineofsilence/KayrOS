@@ -1,0 +1,46 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "spacing": 4,
+    
+    // Порядок модулей
+    "modules-left": ["hyprland/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "cpu", "memory", "tray"],
+
+    // --- НАСТРОЙКИ МОДУЛЕЙ ---
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate"
+    },
+
+    "clock": {
+        "format": "{:%H:%M  📅 %d.%m.%Y}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "🔇 Muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        // По клику открываем наш микшер
+        "on-click": "pavucontrol"
+    },
+
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "🔗 Wired",
+        "format-disconnected": "⚠ Disconnected",
+        // По клику открываем наш терминальный TUI или менеджер
+        "on-click": "kitty -e nmtui"
+    },
+
+    "tray": {
+        "icon-size": 21,
+        "spacing": 10
+    }
+}

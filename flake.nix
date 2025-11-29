@@ -42,6 +42,13 @@
             ./nix/nvidia.nix 
           ];
         };
+
+        # 3. СБОРКА ISO: Команда: nix build .#iso
+        iso = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = baseModules ++ [
+          ./nix/iso.nix
+        ];
       };
     };
 }

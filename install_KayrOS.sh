@@ -166,9 +166,21 @@ mkdir -p $TARGET_DIR
 # Путь к папке с nix-конфигами внутри репозитория
 NIX_SUBDIR="$TARGET_DIR/nix"
 
-# Клонируем репозиторий
 git clone https://github.com/shineofsilence/KayrOS.git $TARGET_DIR
 
+# === ИЗМЕНЕНИЕ ДЛЯ ISO ===
+LOCAL_REPO="/etc/kayros"
+
+if [ -d "$LOCAL_REPO" ]; then
+    echo "💿 Обнаружен локальный образ (ISO Mode). Копирую файлы..."
+    cp -r $LOCAL_REPO/* $TARGET_DIR/
+    # Снимаем защиту от записи (файлы с ISO read-only)
+    chmod -R u+w $TARGET_DIR
+else
+    echo "🌐 Локальный репо не найден. Клонирую с GitHub..."
+    # Клонируем репозиторий
+    git clone https://github.com/shineofsilence/KayrOS.git $TARGET_DIR
+fi
 # 1. Меняем имя пользователя во всех файлах
 find $TARGET_DIR -name "*.nix" -exec sed -i "s/fighter-name/$NEW_USER/g" {} +
 
