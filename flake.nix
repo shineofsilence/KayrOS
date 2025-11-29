@@ -21,7 +21,7 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users.fighter-name = import ./nix/home.nix;
+          home-manager.users.kayros = import ./nix/home.nix;
         }
       ];
     in
@@ -42,26 +42,6 @@
             ./nix/nvidia.nix 
           ];
         };
-      };
-
-      # 2. Приложение установщика
-      apps.${system}.default = {
-        type = "app";
-        program = "${pkgs.writeShellScriptBin "install-KayrOS" ''
-          export PATH=${pkgs.lib.makeBinPath [ 
-            pkgs.whois
-            pkgs.parted 
-            pkgs.btrfs-progs
-            pkgs.pciutils
-            pkgs.util-linux
-            pkgs.git 
-            pkgs.gum 
-            pkgs.nixos-install-tools
-            pkgs.kbd
-          ]}:$PATH
-
-          bash ${self}/install_KayrOS.sh
-        ''}/bin/install-KayrOS";
       };
     };
 }

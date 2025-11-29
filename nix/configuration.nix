@@ -39,7 +39,7 @@
   };
 
   # ==================== Сеть =======================
-  networking.hostName = "fighter-name-pc"; 
+  networking.hostName = "kayros-pc";
   networking.networkmanager.enable = true;
 
   # =========== Часовой пояс и локаль ===============
