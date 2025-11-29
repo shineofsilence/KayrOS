@@ -31,6 +31,7 @@
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     ];
   };
+
   # ========== Чистка от старых снимков =============
   nix.gc = {
     automatic = true;
@@ -60,6 +61,22 @@
     dig            # Проверка DNS
     ethtool        # Проверка сетевых карт
     sing-box       # VPN движок (VLESS/Reality/Shadowsocks)
+  ];
+  # ================= Совместимость бинарников =================
+  # Позволяет запускать скачанные из интернета бинарники (Mason, VS Code и т.д.)
+  programs.nix-ld.enable = true;
+  
+  # Библиотеки, которые чаще всего нужны этим бинарникам
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    fuse3
+    icu
+    zlib
+    nss
+    openssl
+    curl
+    expat
   ];
 
   # ========= Разрешить несвободный софт ============
