@@ -66,7 +66,7 @@
       flavor = "mocha";
       font  = "JetBrains Mono";
       fontSize = "12";
-      background = "${/home/kayros/.config/hypr/assets/lock.jpg}"; # Можно вшить свои обои
+      background = "${./assets/lock.jpg}"; # Можно вшить свои обои
       loginBackground = true;
     })
 
