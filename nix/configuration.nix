@@ -105,11 +105,28 @@
   programs.hyprland.enable = true; 
   
   # ==== Display Manager (Экран входа SDDM) =========
-  services.displayManager.sddm = {
+  #services.displayManager.sddm = {
+  #  enable = true;
+  #  wayland.enable = true;
+  #};
+  services.greetd = {
     enable = true;
-    wayland.enable = true;
-  };
+    settings = {
+      # === АВТОЛОГИН ПРИ ВКЛЮЧЕНИИ ===
+      initial_session = {
+        command = "Hyprland";
+        user = "kayros";
+      };
 
+      # === ПОВЕДЕНИЕ ПРИ ВЫХОДЕ (LOGOUT) ===
+      # Если ты нажмешь "Exit" в Hyprland, тебя выкинет сюда (в консольный вход)
+      default_session = {
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
+        user = "greeter";
+      };
+    };
+  };
+  programs.hyprlock.enable = true; 
   # ============= Сервис флатпаков ==================
   services.flatpak.enable = true;
 
