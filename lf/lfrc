@@ -1,0 +1,51 @@
+# === НАСТРОЙКИ ===
+set previewer ctpv       # Использовать ctpv для картинок и текста
+set cleaner ctpvclear    # Чистить превью при выходе
+set sixel true           # Включить графический протокол
+set dircounts true       # Показывать кол-во файлов в папках
+set icons true           # Если используешь nerd-fonts
+
+# === ОТКРЫТИЕ ФАЙЛОВ ===
+# & означает "запустить в фоне и не блокировать LF"
+cmd open-text  ${{ nvim "$f" }}
+cmd open-image ${{ imv "$f" & }}
+cmd open-pdf   ${{ zathura "$f" & }}
+cmd open-media ${{ mpv --force-window "$f" & }}
+
+# Логика выбора чем открывать (Enter или l)
+cmd open ${{
+    case $(file --mime-type -b "$f") in
+        image/*) cmd-open-image ;;
+        video/*|audio/*) cmd-open-media ;;
+        application/pdf) cmd-open-pdf ;;
+        text/*|application/json|application/x-shellscript) cmd-open-text ;;
+        *) cmd-open-text ;;
+    esac
+}}
+
+map <enter> open
+
+# === СОЗДАНИЕ (FILESYSTEM) ===
+# n = Создать файл. Внизу появится ':touch ', пиши имя и Enter.
+map n push :touch<space>
+# N = Создать папку. Внизу появится ':mkdir -p ', пиши имя и Enter.
+map N push :mkdir -p<space>
+# L = Создать симлинк (относительный).
+# Внизу появится ':ln -s --relative ', пиши цель и имя.
+map L push :ln -s --relative<space>
+
+# === УДАЛЕНИЕ (DELETE) ===
+# D = Удалить выделенное.
+# push вводит команду ':delete', но ждет от тебя Enter.
+# LF спросит "delete X files? [y/n]", так что это БЕЗОПАСНО.
+map D push :delete<enter>
+
+# <Delete> (кнопка) = Удалить сразу без лишних вопросов (в корзину/trash, если настроить)
+# Но пока оставим стандартный безопасный вариант:
+map <delete> push :delete<enter>
+
+# === ДРУГОЕ ===
+# r = Переименовать (стандартно, но на всякий случай)
+map r push :rename<space>
+# q = Выход
+map q quit

@@ -1,0 +1,74 @@
+configuration {
+    modi: "drun,window,run";
+    font: "JetBrains Mono 12";
+    show-icons: true;
+    display-drun: "Apps";
+    display-window: "Windows";
+    display-run: "Run";
+}
+
+// === ТЕМА (Визуал) ===
+* {
+    // Цвета (Adwaita Dark style)
+    bg: #1e1e2e;
+    bg-alt: #313244;
+    fg: #cdd6f4;
+    accent: #89b4fa;
+    
+    background-color: @bg;
+    text-color: @fg;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    width: 45%;         // Ширина окна
+    border: 2px;        // Цветная рамка
+    border-color: @accent;
+    border-radius: 10px;
+}
+
+inputbar {
+    padding: 12px;
+    background-color: @bg-alt;
+    children: [prompt, entry];
+}
+
+prompt {
+    padding: 0 10px 0 0;
+    text-color: @accent;
+    font: "JetBrains Mono 12";
+}
+
+entry {
+    background-color: transparent;
+    text-color: @fg;
+    placeholder: "Search...";
+}
+
+listview {
+    lines: 8;           // Количество строк
+    padding: 8px;
+    background-color: @bg;
+}
+
+element {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+element selected {
+    background-color: @bg-alt; // Цвет выделенного элемента
+    text-color: @accent;
+}
+
+element-icon {
+    size: 24px;
+    margin: 0 10px 0 0;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
