@@ -61,6 +61,15 @@
     dig            # Проверка DNS
     ethtool        # Проверка сетевых карт
     sing-box       # VPN движок (VLESS/Reality/Shadowsocks)
+    # ------- Тема для экрана блокировки -----------
+    (pkgs.catppuccin-sddm.override {
+      flavor = "mocha";
+      font  = "JetBrains Mono";
+      fontSize = "12";
+      background = "${/home/kayros/.config/hypr/assets/lock.jpg}"; # Можно вшить свои обои
+      loginBackground = true;
+    })
+
   ];
   # ================= Совместимость бинарников =================
   # Позволяет запускать скачанные из интернета бинарники (Mason, VS Code и т.д.)
@@ -112,18 +121,6 @@
     theme = "catppuccin-mocha";   # Название темы
     package = pkgs.kdePackages.sddm; # Используем Qt6 версию SDDM (современная)
   };
-
-  # 3. ДОБАВЛЯЕМ ПАКЕТ ТЕМЫ В СИСТЕМУ
-  environment.systemPackages = with pkgs; [
-    # Сама тема. В NixOS она ставится пакетом.
-    (pkgs.catppuccin-sddm.override {
-      flavor = "mocha";
-      font  = "JetBrains Mono";
-      fontSize = "12";
-      background = "${/home/kayros/.config/hypr/assets/lock.jpg}"; # Можно вшить свои обои
-      loginBackground = true;
-    })
-  ];
 
   # ============= Сервис флатпаков ==================
   services.flatpak.enable = true;
