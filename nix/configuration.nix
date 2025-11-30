@@ -119,7 +119,6 @@
     wayland.enable = true;        # Запуск в режиме Wayland
 #    enableHidpi = true;           # Масштабирование для 4k (если надо)
     theme = "catppuccin-mocha";   # Название темы
-    package = pkgs.kdePackages.sddm; # Используем Qt6 версию SDDM (современная)
   };
 
   # ============= Сервис флатпаков ==================
