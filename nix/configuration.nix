@@ -118,7 +118,7 @@
     enable = true;
     wayland.enable = true;        # Запуск в режиме Wayland
 #    enableHidpi = true;           # Масштабирование для 4k (если надо)
-    theme = "catppuccin-mocha";   # Название темы
+    theme = "catppuccin-mocha-mauve";   # Название темы
   };
 
   # ============= Сервис флатпаков ==================
