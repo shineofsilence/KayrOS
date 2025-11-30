@@ -1,0 +1,21 @@
+# Игнорировать вообще всё
+/*
+# Белый список (разрешения)
+!/nix/
+!/nvim/
+!/lf/
+!/kitty/
+!/fish/
+!/starship.toml
+!/lazygit/
+!/waybar/
+!/hypr/
+!/btop/
+!/mpv/
+!/rofi/
+!/.gitignore
+!/flake.nix
+!/flake.lock
+!/install_KayrOS.sh
+!/get
+!/README.md

@@ -1,64 +1,82 @@
-# === НАСТРОЙКИ ===
-set previewer ctpv       # Использовать ctpv для картинок и текста
-set cleaner ctpvclear    # Чистить превью при выходе
-set sixel true           # Включить графический протокол
-set dircounts true       # Показывать кол-во файлов в папках
-set icons true           # Если используешь nerd-fonts
+# =================== НАСТРОЙКИ ИНТЕРФЕЙСА ====================
+set previewer ctpv       # Генератор превью
+set cleaner ctpvclear    # Очистка превью
+set sixel true           # Графический протокол (Sixel)
+set dircounts true       # Счетчик файлов в папках
+set icons true           # Отображение иконок
+set errorfmt "\033[31;1m%s\033[0m"    # Читаемое отображение ошибок
 
-# === ОТКРЫТИЕ ФАЙЛОВ ===
-# === ОПРЕДЕЛЕНИЕ КОМАНД (ACTIONS) ===
-# $nvim означает: "LF, отдай терминал неовиму"
+# ===================== ОТКРЫТИЕ ФАЙЛОВ =======================
 cmd open-text $nvim "$f"
-
-# {{ ... & }} означает: "Shell, запусти в фоне"
 cmd open-image ${{ imv "$f" & }}
 cmd open-pdf   ${{ zathura "$f" & }}
 cmd open-media ${{ mpv --force-window "$f" & }}
 
-# === ЛОГИКА ВЫБОРА (ROUTER) ===
-# Мы используем lf -remote, чтобы вызвать команды выше из shell-скрипта
-cmd open ${{
-    # Определяем тип файла (нужен пакет 'file')
+cmd open %{{
     mime=$(file --mime-type -b "$f")
-
     case "$mime" in
-        image/*) 
-            lf -remote "send $id open-image" ;;
-        video/*|audio/*) 
-            lf -remote "send $id open-media" ;;
-        application/pdf) 
-            lf -remote "send $id open-pdf" ;;
-        text/*|application/json|application/x-shellscript|application/xml) 
-            lf -remote "send $id open-text" ;;
-        *) 
-            # Fallback: если не поняли что это, пробуем открыть как текст
-            lf -remote "send $id open-text" ;;
+        image/*) lf -remote "send $id open-image" ;;
+        video/*|audio/*) lf -remote "send $id open-media" ;;
+        application/pdf) lf -remote "send $id open-pdf" ;;
+        text/*|application/json|application/x-shellscript|application/xml) lf -remote "send $id open-text" ;;
+        *) lf -remote "send $id open-text" ;;
     esac
 }}
 
+# ===================== ГОРЯЧИЕ КЛАВИШИ =======================
+# . = Переключить скрытые файлы (вкл/выкл)
+map . set hidden!
+
+# Открыть файл
 map <enter> open
 
-# === СОЗДАНИЕ (FILESYSTEM) ===
-# n = Создать файл. Внизу появится ':touch ', пиши имя и Enter.
+# Создаем команду-фильтр: входить только в папки
+cmd enter-dir %{{
+    if [ -d "$f" ]; then
+        lf -remote "send $id open"
+    fi
+}}
+map l enter-dir
+  
+# Создание файла (права 644)
+cmd touch %{{
+    touch "$@"
+    chmod 644 "$@"
+}}
 map n push :touch<space>
-# N = Создать папку. Внизу появится ':mkdir -p ', пиши имя и Enter.
-map N push :mkdir -p<space>
-# L = Создать симлинк (относительный).
-# Внизу появится ':ln -s --relative ', пиши цель и имя.
+
+# Создание папки (права 755)
+cmd mkdir %{{
+    mkdir -p -m 755 "$@"
+}}
+map N push :mkdir<space>
+
+# Создание ссылок
+cmd ln %{{
+    ln "$@"
+}}
 map L push :ln -s --relative<space>
 
-# === УДАЛЕНИЕ (DELETE) ===
-# D = Удалить выделенное.
-# push вводит команду ':delete', но ждет от тебя Enter.
-# LF спросит "delete X files? [y/n]", так что это БЕЗОПАСНО.
-map D push :delete<enter>
+# Сделать исполняемым (+x)
+cmd chmod-exec %{{
+    chmod +x "$f"
+    lf -remote "send $id reload"
+}}
+map x chmod-exec
 
-# <Delete> (кнопка) = Удалить сразу без лишних вопросов (в корзину/trash, если настроить)
-# Но пока оставим стандартный безопасный вариант:
-map <delete> push :delete<enter>
+# Переименовать
+map r rename
 
-# === ДРУГОЕ ===
-# r = Переименовать (стандартно, но на всякий случай)
-map r push :rename<space>
-# q = Выход
+# Удалить (с подтверждением)
+map D push :delete<enter>         
+
+# Мгновенное удаление (ОПАСНО!) + Обновить список
+cmd delete-now %{{
+    rm -rf "$fx"
+    lf -remote "send $id reload"
+}}
+map <delete> delete-now           # Удалить (клавиша Del)
+
+# Выйти из файлового менеджера
 map q quit
+
