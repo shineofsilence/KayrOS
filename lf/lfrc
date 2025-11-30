@@ -6,20 +6,33 @@ set dircounts true       # Показывать кол-во файлов в па
 set icons true           # Если используешь nerd-fonts
 
 # === ОТКРЫТИЕ ФАЙЛОВ ===
-# & означает "запустить в фоне и не блокировать LF"
-cmd open-text  ${{ nvim "$f" }}
+# === ОПРЕДЕЛЕНИЕ КОМАНД (ACTIONS) ===
+# $nvim означает: "LF, отдай терминал неовиму"
+cmd open-text $nvim "$f"
+
+# {{ ... & }} означает: "Shell, запусти в фоне"
 cmd open-image ${{ imv "$f" & }}
 cmd open-pdf   ${{ zathura "$f" & }}
 cmd open-media ${{ mpv --force-window "$f" & }}
 
-# Логика выбора чем открывать (Enter или l)
+# === ЛОГИКА ВЫБОРА (ROUTER) ===
+# Мы используем lf -remote, чтобы вызвать команды выше из shell-скрипта
 cmd open ${{
-    case $(file --mime-type -b "$f") in
-        image/*) cmd-open-image ;;
-        video/*|audio/*) cmd-open-media ;;
-        application/pdf) cmd-open-pdf ;;
-        text/*|application/json|application/x-shellscript) cmd-open-text ;;
-        *) cmd-open-text ;;
+    # Определяем тип файла (нужен пакет 'file')
+    mime=$(file --mime-type -b "$f")
+
+    case "$mime" in
+        image/*) 
+            lf -remote "send $id open-image" ;;
+        video/*|audio/*) 
+            lf -remote "send $id open-media" ;;
+        application/pdf) 
+            lf -remote "send $id open-pdf" ;;
+        text/*|application/json|application/x-shellscript|application/xml) 
+            lf -remote "send $id open-text" ;;
+        *) 
+            # Fallback: если не поняли что это, пробуем открыть как текст
+            lf -remote "send $id open-text" ;;
     esac
 }}
 
