@@ -105,28 +105,26 @@
   programs.hyprland.enable = true; 
   
   # ==== Display Manager (Экран входа SDDM) =========
-  #services.displayManager.sddm = {
-  #  enable = true;
-  #  wayland.enable = true;
-  #};
-  services.greetd = {
+  services.displayManager.sddm = {
     enable = true;
-    settings = {
-      # === АВТОЛОГИН ПРИ ВКЛЮЧЕНИИ ===
-      initial_session = {
-        command = "Hyprland";
-        user = "kayros";
-      };
-
-      # === ПОВЕДЕНИЕ ПРИ ВЫХОДЕ (LOGOUT) ===
-      # Если ты нажмешь "Exit" в Hyprland, тебя выкинет сюда (в консольный вход)
-      default_session = {
-        command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-        user = "greeter";
-      };
-    };
+    wayland.enable = true;        # Запуск в режиме Wayland
+#    enableHidpi = true;           # Масштабирование для 4k (если надо)
+    theme = "catppuccin-mocha";   # Название темы
+    package = pkgs.kdePackages.sddm; # Используем Qt6 версию SDDM (современная)
   };
-  programs.hyprlock.enable = true; 
+
+  # 3. ДОБАВЛЯЕМ ПАКЕТ ТЕМЫ В СИСТЕМУ
+  environment.systemPackages = with pkgs; [
+    # Сама тема. В NixOS она ставится пакетом.
+    (pkgs.catppuccin-sddm.override {
+      flavor = "mocha";
+      font  = "JetBrains Mono";
+      fontSize = "12";
+      background = "${/home/kayros/.config/hypr/assets/lock.jpg}"; # Можно вшить свои обои
+      loginBackground = true;
+    })
+  ];
+
   # ============= Сервис флатпаков ==================
   services.flatpak.enable = true;
 
