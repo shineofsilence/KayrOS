@@ -5,6 +5,23 @@ configuration {
     display-drun: "Apps";
     display-window: "Windows";
     display-run: "Run";
+    // === VIM KEYBINDINGS ===
+    // 1. Очистка конфликтов (Снимаем дефолтные действия)
+    kb-remove-to-eol: "";       // Был Ctrl+k
+    kb-accept-entry: "Return,KP_Enter"; // Был Ctrl+j
+    kb-remove-char-back: "BackSpace"; // Был Ctrl+h
+    kb-mode-complete: "";       // Был Ctrl+l
+    kb-element-next: "";        // Иногда Ctrl+l
+    // 2. Навигация (J - Вниз, K - Вверх)
+    kb-row-up: "Up,Control+k";
+    kb-row-down: "Down,Control+j";
+    // 3. Выбор / Открыть (H)
+    kb-accept-entry: "Return,KP_Enter,Control+h";
+    // 4. Закрыть окно / Удалить элемент (L)
+    // В режиме 'window' это закроет окно приложения.
+    kb-delete-entry: "Shift+Delete,Control+l";
+    // 5. Выход (P)
+    kb-cancel: "Escape,Control+p";
 }
 
 // === ТЕМА (Визуал) ===
