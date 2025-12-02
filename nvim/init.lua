@@ -32,6 +32,8 @@ vim.opt.fileformat = 'unix'         -- Формат файлов из unix-си�
 -- ===================================================================
 -- 2. ПЕРЕОПРЕДЕЛЕНИЕ И ОЧИСТКА КОНФЛИКТУЮЩИХ ГОРЯЧИХ КЛАВИШ
 -- ===================================================================
+require('kay_control')
+
 vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true, desc = "Navigate window left" })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true, desc = "Navigate window right" })
 
@@ -84,7 +86,7 @@ require('lazy').setup({
             vim.cmd.colorscheme 'catppuccin'
         end,
     },
-    
+
     -- === ФАЙЛОВЫЙ МЕНЕДЖЕР ===
     {
         'nvim-neo-tree/neo-tree.nvim',
@@ -107,7 +109,7 @@ require('lazy').setup({
             vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<CR>', { desc = 'Toggle Neo-tree' })
         end,
     },
-    
+
     -- === LSP, MASON и АВТОДОПОЛНЕНИЕ (САМОЕ ВАЖНОЕ) ===
     {
         'neovim/nvim-lspconfig',
@@ -217,8 +219,8 @@ require('lazy').setup({
             })
         end,
     },
-   
-    
+
+
     -- === TREESITTER - Подсветка синтаксиса ===
     {
         'nvim-treesitter/nvim-treesitter',
@@ -243,7 +245,25 @@ require('lazy').setup({
             { '<leader>b', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         },
     },
-    -- === ДРУГИЕ ПОЛЕЗНЫЕ ПЛАГИНЫ ===
+    -- === КОММЕНТИРОВАНИЕ СТРОК ===
     { 'numToStr/Comment.nvim', opts = { }},                           -- Плагин добавления комментариев
+    -- === УМНЫЕ ДВИЖЕНИЯ (SUB-WORDS) ===
+    {
+        "chrisgrieser/nvim-spider",
+        lazy = true,
+        config = function()
+            require("spider").setup({
+                skipInsignificantPunctuation = true, -- Пропускать знаки препинания (твой запрос!)
+                subwordMovement = true, -- Учитывать CamelCase и snake_case
+                customPatterns = {}, -- Можно задать паттерны, что считать словом
+            })
+        end,
+    },
+    -- === АВТО-СКОБКИ ===
+    {
+        'windwp/nvim-autopairs',
+        event = "InsertEnter",
+        config = true -- Дефолтный конфиг отличный
+    },
 })
 
