@@ -1,3 +1,6 @@
+local config_path = vim.fn.stdpath('config')
+package.path = package.path .. ';' .. config_path .. '/lua/?.lua'
+-- package.path = package.path .. ';' .. config_path .. '/lua/?/init.lua'
 -- ===================================================================
 -- 1. БАЗОВЫЕ НАСТРОЙКИ NEOVIM
 -- ===================================================================
@@ -32,7 +35,7 @@ vim.opt.fileformat = 'unix'         -- Формат файлов из unix-си�
 -- ===================================================================
 -- 2. ПЕРЕОПРЕДЕЛЕНИЕ И ОЧИСТКА КОНФЛИКТУЮЩИХ ГОРЯЧИХ КЛАВИШ
 -- ===================================================================
-require('kay_control')
+require('hotkeys')
 
 vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true, desc = "Navigate window left" })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true, desc = "Navigate window right" })
@@ -221,20 +224,39 @@ require('lazy').setup({
     },
 
 
-    -- === TREESITTER - Подсветка синтаксиса ===
+-- === TREESITTER (Подсветка и Структура) ===
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects', -- <--- ВОТ ЭТОГО НЕ ХВАТАЛО
+        },
         config = function()
             require('nvim-treesitter.configs').setup {
-                -- ДОБАВЛЕНЫ gleam и python
                 ensure_installed = { 'gleam', 'python', 'lua', 'vim', 'bash', 'json', 'markdown' },
                 highlight = { enable = true },
                 indent = { enable = true },
+                -- Настройка текстовых объектов (чтобы работали y, o, u, i)
+                textobjects = {
+                    select = {
+                        enable = true,
+                        lookahead = true,
+                        keymaps = {
+                            -- Описываем, что считать "внутренностью" и "внешностью"
+                            ["af"] = "@function.outer",
+                            ["if"] = "@function.inner",
+                            ["ia"] = "@parameter.inner",
+                            ["aa"] = "@parameter.outer",
+                        },
+                    },
+                    move = {
+                        enable = true, -- Это позволяет работать модулю move.lua
+                        set_jumps = true, 
+                    },
+                },
             }
         end
-    },
-    -- === TELESCOPE (Поиск) ===
+    },    -- === TELESCOPE (Поиск) ===
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },

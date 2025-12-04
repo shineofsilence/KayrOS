@@ -5,7 +5,7 @@ import subprocess
 
 class Hyprland:
     # Конструктор
-    def __init__(self, bus):
+    def __init__(self, bus):                                
         self.bus = bus
         signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
 
