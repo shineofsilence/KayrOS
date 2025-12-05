@@ -8,7 +8,6 @@ class Hyprland:
     def __init__(self, bus):                                
         self.bus = bus
         signature = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE")
-
         # Пути к сокетам
         self.hypr_event_socket = f"/tmp/hypr/{signature}/.socket2.sock"
         self.my_command_socket = os.path.expanduser("~/.kayros.sock")

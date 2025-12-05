@@ -1,6 +1,5 @@
 local config_path = vim.fn.stdpath('config')
 package.path = package.path .. ';' .. config_path .. '/lua/?.lua'
--- package.path = package.path .. ';' .. config_path .. '/lua/?/init.lua'
 -- ===================================================================
 -- 1. БАЗОВЫЕ НАСТРОЙКИ NEOVIM
 -- ===================================================================
@@ -25,7 +24,7 @@ opt.shiftwidth = 4                  -- Ширина отступа в 4 проб
 -- opt.showmode = false -- Не показывать текущий режим (это сделает статусная строка)
 opt.ignorecase = true               -- Игнорировать регистр при поиске
 opt.smartcase = true                -- Если в поиске есть заглавная буква, искать с учетом регистра
-opt.tabstop = 4
+opt.tabstop = 4                     -- Табуляция в 4 пробела
 opt.termguicolors = true            -- Включить 24-битные цвета
 opt.timeoutlen = 300                -- Уменьшить задержку для <leader> команд
 opt.undofile = true                 -- Сохранять историю изменений между сессиями
@@ -36,9 +35,7 @@ vim.opt.fileformat = 'unix'         -- Формат файлов из unix-си�
 -- 2. ПЕРЕОПРЕДЕЛЕНИЕ И ОЧИСТКА КОНФЛИКТУЮЩИХ ГОРЯЧИХ КЛАВИШ
 -- ===================================================================
 require('hotkeys')
-
-vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true, silent = true, desc = "Navigate window left" })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true, silent = true, desc = "Navigate window right" })
+require('comment')
 
 -- ===================================================================
 -- 3. УСТАНОВКА МЕНЕДЖЕРА ПЛАГИНОВ (LAZY.NVIM)

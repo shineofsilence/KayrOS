@@ -1,32 +1,49 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local cmd_opts = { noremap = true, silent = false }
 
 -- ПРАВда там, где сердце. С какой стороны сердце? ПРАВильно: с ПРАВой.
 -- Выбирайся из этого королевства кривых зеркал, дружок.
 
+-- Выход в Normal (аналог Esc) из Insert, Visual и Command
+map({'i', 'v', 'c'}, '<M-p>', '<Esc>', opts)
+
+-- ====================== Режим редактирования ========================
+map('i', '<M-h>', '<Left>', opts)
+map('i', '<M-l>', '<Right>', opts)
+map('i', '<M-j>', '<BS>', opts)
+map('i', '<M-k>', '<Del>', opts)
+
+-- ====================== Режим команд ========================
+map('c', '<M-h>', '<Left>', cmd_opts)
+map('c', '<M-l>', '<Right>', cmd_opts)
+map('c', '<M-j>', '<BS>', cmd_opts)
+map('c', '<M-k>', '<Del>', cmd_opts)
+
 -- ====================== Правая рука - перемещение ========================
 -- ------------- Вправо -----------------
-map('n', 'h', 'h', opts)                                     -- Вправо на символ
-map('n', 'H', 'b', opts)                                     -- Вправо по началу слова
-map('n', 'y', function() require("nvim-treesitter.textobjects.move").goto_previous_start("@parameter.inner") end, opts) -- Предыдущий аргумент
-map('n', 'Y', '^', opts)                                     -- В начало строки (первый символ)
+map({'n', 'v'}, 'h', 'h', opts)                                     -- Вправо на символ
+map({'n', 'v'}, 'H', 'b', opts)                                     -- Вправо по началу слова
+map({'n', 'v'}, 'y', function() require("nvim-treesitter.textobjects.move").goto_previous_start("@parameter.inner") end, opts) -- Предыдущий аргумент
+map({'n', 'v'}, 'Y', '^', opts)                                     -- В начало строки (первый символ)
 
 -- ------------- Влево -----------------
-map('n', 'l', 'l', opts)                                     -- Влево на символ
-map('n', 'L', 'w', opts)                                     -- Влево по началу слова
-map('n', 'o', function() require("nvim-treesitter.textobjects.move").goto_next_start("@parameter.inner") end, opts)     -- Следующий аргумент
-map('n', 'O', '$', opts)                                     -- В конец строки
+map({'n', 'v'}, 'l', 'l', opts)                                     -- Влево на символ
+map({'n', 'v'}, 'L', 'w', opts)                                     -- Влево по началу слова
+map({'n', 'v'}, 'o', function() require("nvim-treesitter.textobjects.move").goto_next_start("@parameter.inner") end, opts)     -- Следующий аргумент
+map({'n', 'v'}, 'O', '$', opts)                                     -- В конец строки
 
 -- ------------- Вверх -----------------
-map('n', 'k', 'k', opts)                                     -- Вверх к началу строки
-map('n', 'K', '4k', opts)                                    -- 3 строки вверх к началу
-map('n', 'u', '{', opts)                                     -- Параграф вверх
-map('n', 'U', 'G', opts)                                     -- В начало файла
+map({'n', 'v'}, 'k', 'k', opts)                                     -- Вверх к началу строки
+map({'n', 'v'}, 'K', '4k', opts)                                    -- 3 строки вверх к началу
+map({'n', 'v'}, 'u', '}', opts)                                     -- Параграф вверх
+map({'n', 'v'}, 'U', 'G', opts)                                     -- В начало файла
+
 -- ------------- Вниз -----------------
-map('n', 'j', 'j', opts)                                     -- Вниз к началу строки
-map('n', 'J', '4j', opts)                                    -- 3 строки вниз к началу
-map('n', 'i', '}', opts)                                     -- Параграф вниз
-map('n', 'I', 'gg', opts)                                    -- В конец файла
+map({'n', 'v'}, 'j', 'j', opts)                                     -- Вниз к началу строки
+map({'n', 'v'}, 'J', '4j', opts)                                    -- 3 строки вниз к началу
+map({'n', 'v'}, 'i', '{', opts)                                     -- Параграф вниз
+map({'n', 'v'}, 'I', 'gg', opts)                                    -- В конец файла
 
 -- --- Мгновенный скачок к скобкам и кавычкам ---
 map('n', '(', '/(<CR>', opts)                                -- Найти следующую (
@@ -61,7 +78,7 @@ map('n', 'R', 'a', opts)                                     -- Редактир
 map('n', 'e', 'r', opts)                                     -- Замена одного символа
 map('n', 'E', 'x', opts)                                     -- Удалить символ
 map('n', 'w', 'v', opts)                                     -- Выделение символьное
-map('n', 'W', '<cmd>nohl<CR>', opts)                         -- Снять выделение поиска
+map('n', 'q', '<cmd>nohl<CR>', opts)                         -- Снять выделение поиска
 
 -- ------------- Слова -----------------
 map('n', 'f', 'bi', opts)                                    -- Редактировать до слова
@@ -76,22 +93,11 @@ map('n', 'v', 'o', opts)                                     -- Новая ст�
 map('n', 'V', 'O', opts)                                     -- Новая строка сверху
 map('n', 'c', 'cc', opts)                                    -- Коррекция строки (удалить и вставка)
 map('n', 'C', 'dd', opts)                                    -- Удалить строку
-map('n', 'x', 'yy', opts)                                    -- Скопировать строку
+map({'n', 'v'}, 'x', 'y', opts)                              -- Скопировать
+map({'n', 'v'}, 'X', 'yy', opts)                             -- Скопировать строку
 
 -- ------------- Разное -----------------
 map('n', 'a', 'p', opts)                                     -- Вставить
 map('n', 't', vim.lsp.buf.rename, opts)                      -- Переименовать переменную
 map('n', 'z', 'u', opts)                                     -- Отмена действия (Undo)
 map('n', 'Z', '<C-r>', opts)                                 -- Повтор действия (Redo)
-
-map('n', 'g', 'gcc', { remap = true })                       -- Комментировать строку
-local function aligned_comment()        -- Функция для добавления комментария на 60-й колонке
-    local target_col = 60
-    local current_len = vim.fn.col('$') - 1
-    local spaces = math.max(1, target_col - current_len)
-    vim.cmd("normal! A" .. string.rep(" ", spaces))
-    -- Запускаем gcc на текущей строке, чтобы добавить символ комментария, затем в режим вставки
-    require('Comment.api').toggle.linewise.current()
-    vim.cmd("startinsert!") 
-end
-map('n', 'G', aligned_comment, opts)                         -- Комментарий с отступом справа
