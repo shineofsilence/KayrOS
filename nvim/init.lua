@@ -1,45 +1,36 @@
 local config_path = vim.fn.stdpath('config')
 package.path = package.path .. ';' .. config_path .. '/lua/?.lua'
--- ===================================================================
--- 1. БАЗОВЫЕ НАСТРОЙКИ NEOVIM
--- ===================================================================
-vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#a89984" })
-vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#a89984" })
-vim.g.mapleader = ' '               -- Устанавливаем <Leader> на пробел
-vim.g.maplocalleader = ' '          -- Локально тоже
 
-local opt = vim.opt
-opt.autowrite = true                -- Автоматически сохранять при переключении буферов
-opt.clipboard = 'unnamedplus'       -- Использовать системный буфер обмена
+-- =================== Базовые настройки ===================
+vim.g.mapleader = ' '                             -- Устанавливаем <Leader> на пробел
+local opt = vim.opt                               -- Переопределяем для сокращения
+vim.g.maplocalleader = ' '                        -- Локально тоже
+opt.timeoutlen = 1000                             -- Задержка команды
+opt.autowrite = true                              -- Автоматически сохранять при переключении буферов
+opt.clipboard = 'unnamedplus'                     -- Использовать системный буфер обмена
 opt.completeopt = 'menu,menuone,noselect'
-opt.confirm = true                  -- Спрашивать подтверждение, если есть несохраненные изменения
-opt.cursorline = true               -- Подсвечивать текущую строку
-opt.expandtab = true                -- Использовать пробелы вместо табуляции
-opt.mouse = 'a'                     -- Включить поддержку мыши во всех режимах
-opt.number = true                   -- Показывать номера строк
-opt.relativenumber = true           -- Показывать относительные номера строк
-opt.scrolloff = 8                   -- Оставлять 8 строк выше и ниже курсора при прокрутке
-opt.sidescrolloff = 8               -- Оставлять 8 строк левее и правее курсора при прокрутке
-opt.shiftwidth = 4                  -- Ширина отступа в 4 пробела
--- opt.showmode = false -- Не показывать текущий режим (это сделает статусная строка)
-opt.ignorecase = true               -- Игнорировать регистр при поиске
-opt.smartcase = true                -- Если в поиске есть заглавная буква, искать с учетом регистра
-opt.tabstop = 4                     -- Табуляция в 4 пробела
-opt.termguicolors = true            -- Включить 24-битные цвета
-opt.timeoutlen = 300                -- Уменьшить задержку для <leader> команд
-opt.undofile = true                 -- Сохранять историю изменений между сессиями
-opt.wrap = false                    -- Отключить перенос строк
-vim.opt.fileformat = 'unix'         -- Формат файлов из unix-систем
+opt.confirm = true                                -- Спрашивать подтверждение, если есть несохраненные изменения
+opt.undofile = true                               -- Сохранять историю изменений между сессиями
+opt.mouse = 'a'                                   -- Включить поддержку мыши во всех режимах
+opt.wrap = false                                  -- Отключить перенос строк
+opt.cursorline = true                             -- Подсвечивать текущую строку
+opt.number = true                                 -- Показывать номера строк
+opt.expandtab = true                              -- Использовать пробелы вместо табуляции
+opt.shiftwidth = 4                                -- Ширина отступа в 4 пробела
+opt.tabstop = 4                                   -- Табуляция в 4 пробела
+opt.scrolloff = 8                                 -- Оставлять 8 строк выше и ниже курсора при прокрутке
+opt.ignorecase = true                             -- Игнорировать регистр при поиске
+opt.smartcase = true                              -- Если в поиске есть заглавная буква, искать с учетом регистра
+opt.fileformat = 'unix'                           -- Формат файлов из unix-систем
+opt.termguicolors = true                          -- Включить 24-битные цвета
 
--- ===================================================================
--- 2. ПЕРЕОПРЕДЕЛЕНИЕ И ОЧИСТКА КОНФЛИКТУЮЩИХ ГОРЯЧИХ КЛАВИШ
--- ===================================================================
-require('hotkeys')
-require('comment')
+-- ==================== Кай-управление =====================
+require('hotkeys')                                -- Горячие клавиши
+require('comment')                                -- Добавление комментариев
+require('category')                               -- Обозначение разделов и подразделов
+require('magnet_scroll')                          -- Магнитный горизонтальный скролл
 
--- ===================================================================
--- 3. УСТАНОВКА МЕНЕДЖЕРА ПЛАГИНОВ (LAZY.NVIM)
--- ===================================================================
+-- ========= Установка менеджера плагинов LazyVim ==========
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
     vim.fn.system({
@@ -51,20 +42,17 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
         lazypath,
     })
 end
-vim.opt.rtp:prepend(lazypath)
+opt.rtp:prepend(lazypath)
 
--- ===================================================================
--- 4. СПИСОК И НАСТРОЙКА ПЛАГИНОВ
--- ===================================================================
+-- ======================== Плагины ========================
 require('lazy').setup({
-    -- === ТЕМА ===
+    -- ------------------ Тема оформления ------------------
     {
         'catppuccin/nvim',
         name = 'catppuccin',
-        priority = 1000, -- Высокий приоритет, чтобы тема загружалась первой
+        priority = 1000,
         config = function()
             require('catppuccin').setup({
-                -- Это та самая важная настройка для работы с фоном Kitty!
                 transparent_background = true,
                 -- Другие стили, если понадобятся
                 styles = {
@@ -82,19 +70,18 @@ require('lazy').setup({
                     operators = {},
                 },
             })
-            -- Применяем тему
-            vim.cmd.colorscheme 'catppuccin'
+            vim.cmd.colorscheme 'catppuccin'      -- Применяем тему
         end,
     },
 
-    -- === ФАЙЛОВЫЙ МЕНЕДЖЕР ===
+    -- ----------------- Файловый менеджер -----------------
     {
         'nvim-neo-tree/neo-tree.nvim',
         branch = 'v3.x',
         dependencies = {
             "nvim-lua/plenary.nvim",        -- Обязательная зависимость
             "nvim-tree/nvim-web-devicons",  -- Для красивых иконок файлов
-            "MunifTanjim/nui.nvim",         -- Интерфейс (Обязательная зависимость)
+            "MunifTanjim/nui.nvim",         -- Интерфейс
         },
         config = function()
             require('neo-tree').setup({
@@ -110,30 +97,27 @@ require('lazy').setup({
         end,
     },
 
-    -- === LSP, MASON и АВТОДОПОЛНЕНИЕ (САМОЕ ВАЖНОЕ) ===
+    -- --------------- LSP и автодополнение ----------------
     {
         'neovim/nvim-lspconfig',
         dependencies = {
-            -- Mason управляет установкой серверов
-            'williamboman/mason.nvim',
-            -- Mason-LSPConfig связывает Mason и встроенный lspconfig
-            'williamboman/mason-lspconfig.nvim', 
-
+            'williamboman/mason.nvim',            -- Mason - менеджер LSP
+            'williamboman/mason-lspconfig.nvim',  -- Связь mason и встренного lspconfig
             -- Автодополнение
             'hrsh7th/nvim-cmp',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
-            'L3MON4D3/LuaSnip', -- Сниппеты (нужны для многих LSP)
+            'L3MON4D3/LuaSnip',                   -- Сниппеты
         },
         config = function()
-            -- 1. Инициализируем Mason (пусть качает бинарники)
+            -- 1. Инициализируем Mason
             require('mason').setup()
 
-            -- 2. Настраиваем "Capabilities" (чтобы Neovim сказал серверам: "я умею в автодополнение")
+            -- 2. Настраиваем "Capabilities"
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-            -- 3. Общая функция on_attach (бинды работают только если LSP активен)
+            -- 3. Общая функция on_attach
             local on_attach = function(client, bufnr)
                 local nmap = function(keys, func, desc)
                     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc, silent = true })
@@ -145,27 +129,25 @@ require('lazy').setup({
                 nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
             end
 
-            -- 4. Настраиваем Mason-LSPConfig (для ВСЕХ, КРОМЕ GLEAM)
+            -- 4. Настраиваем Mason-LSPConfig
             require('mason-lspconfig').setup({
-                -- Сюда пишем всё, что Mason должен поставить сам
-                ensure_installed = { 
-                    'pyright', 
-                    'bashls', 
-                    'dockerls', 
-                    'jsonls', 
-                    'yamlls', 
-                    'ts_ls', 
-                    'lua_ls' 
-                }, 
+                -- ----------- Список LSP-серверов от mason ------------
+                ensure_installed = {
+                    'pyright',
+                    'bashls',
+                    'dockerls',
+                    'jsonls',
+                    'yamlls',
+                    'ts_ls',
+                    'lua_ls'
+                },
                 handlers = {
-                    -- Стандартный обработчик: для каждого установленного сервера запускаем setup
                     function(server_name)
                         require('lspconfig')[server_name].setup({
                             capabilities = capabilities,
                             on_attach = on_attach,
                         })
                     end,
-
                     -- Пример настройки Lua (чтобы не ругался на глобальную переменную vim)
                     ["lua_ls"] = function()
                         require('lspconfig').lua_ls.setup({
@@ -177,9 +159,7 @@ require('lazy').setup({
                 }
             })
 
-            -- 5. Настраиваем GLEAM ВРУЧНУЮ (Нативный метод)
-            -- Используем автокоманду для запуска LSP только в файлах .gleam
-            -- Это полностью обходит ошибку deprecated
+            -- 5. Настраиваем GLEAM стандартным методом
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "gleam",
                 callback = function(ev)
@@ -194,10 +174,9 @@ require('lazy').setup({
                 end,
             })
 
-            -- 6. Настройка самого автодополнения (CMP)
+            -- 6. Настройка  автодополнения (CMP)
             local cmp = require('cmp')
             local luasnip = require('luasnip')
-
             cmp.setup({
                 snippet = {
                     expand = function(args)
@@ -220,13 +199,12 @@ require('lazy').setup({
         end,
     },
 
-
--- === TREESITTER (Подсветка и Структура) ===
+    -- --- Подсветка синтаксиса и структуры - Treesitter ---
     {
         'nvim-treesitter/nvim-treesitter',
         build = ':TSUpdate',
         dependencies = {
-            'nvim-treesitter/nvim-treesitter-textobjects', -- <--- ВОТ ЭТОГО НЕ ХВАТАЛО
+            'nvim-treesitter/nvim-treesitter-textobjects',
         },
         config = function()
             require('nvim-treesitter.configs').setup {
@@ -253,36 +231,44 @@ require('lazy').setup({
                 },
             }
         end
-    },    -- === TELESCOPE (Поиск) ===
+    },
+
+    -- ----------------- Telescope - поиск -----------------
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
         keys = {
-            -- Оборачиваем require в функцию, чтобы вызов происходил только при нажатии
             { '<leader>f', function() require('telescope.builtin').find_files() end, desc = 'Find Files' },
             { '<leader>g', function() require('telescope.builtin').live_grep() end, desc = 'Live Grep' },
             { '<leader>b', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
         },
     },
-    -- === КОММЕНТИРОВАНИЕ СТРОК ===
-    { 'numToStr/Comment.nvim', opts = { }},                           -- Плагин добавления комментариев
-    -- === УМНЫЕ ДВИЖЕНИЯ (SUB-WORDS) ===
+
+    -- ---------- Плагин добавления комментариев -----------
+    { 'numToStr/Comment.nvim', opts = { }},
+
+    -- -------------- Движение по под-словам ---------------
     {
         "chrisgrieser/nvim-spider",
-        lazy = true,
+        lazy = false,
         config = function()
             require("spider").setup({
-                skipInsignificantPunctuation = true, -- Пропускать знаки препинания (твой запрос!)
-                subwordMovement = true, -- Учитывать CamelCase и snake_case
-                customPatterns = {}, -- Можно задать паттерны, что считать словом
+                skipInsignificantPunctuation = false,
+                subwordMovement = true,
+                customPatterns = {
+                    -- %w       -> Латиница и цифры
+                    -- \128-\255 -> Все UTF-8 символы (русский и др.)
+                    -- Всё остальное (знаки, скобки, пробелы) игнорируется
+                    "[%w\128-\255]+", 
+                },
             })
         end,
     },
-    -- === АВТО-СКОБКИ ===
+
+    -- - Автоматическая расстановка закрывающих спецсиволов -
     {
         'windwp/nvim-autopairs',
         event = "InsertEnter",
-        config = true -- Дефолтный конфиг отличный
+        config = true
     },
-})
-
+})

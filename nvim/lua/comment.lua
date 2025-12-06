@@ -1,8 +1,7 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
-map('n', 'g', function() require('Comment.api').toggle.linewise.current() end, opts)
-
+-- ======== Функция создания комментария на отступе ========
 local function aligned_comment()
     -- -------------------- Подготовка данных --------------------
     local line = vim.api.nvim_get_current_line()
@@ -10,13 +9,13 @@ local function aligned_comment()
     if not cms or cms == "" then cms = "# %s" end         -- Значение по умолчанию
     -- Получаем сам символ комментария (до %s)
     local comment_char = vim.trim(vim.split(cms, "%s")[1])
+
     -- 0. Ищем комментарий с конца строки (реверс)
     local rev_line = line:reverse()
     local rev_char = comment_char:reverse()
     local s_rev_start, s_rev_end = rev_line:find(rev_char, 1, true)
 
-    -- -------------------- Ветвление алгоритма --------------------
-    -- Если комментарий найден
+    -- -------------- Если комментарий найден --------------
     if s_rev_start then
         local s_start = #line - s_rev_end + 1             -- Вычисляем реальный индекс
         local content_before = line:sub(1, s_start - 1)   -- Текст до комментария
@@ -28,7 +27,7 @@ local function aligned_comment()
         local clean_code = content_before:match("^(.*%S)") or ""
         vim.api.nvim_set_current_line(clean_code)
 
-    -- Если комментарий не найден
+    -- ------------ Если комментарий не найден -------------
     else
         -- 2а. Очищаем хвост строки
         local clean_line = line:match("^(.*%S)") or ""
@@ -43,29 +42,27 @@ local function aligned_comment()
         vim.cmd("startinsert!")
     end
 end
-
 -- Добавляем описание к опциям для which-key (если используется)
 local key_opts = vim.tbl_extend("force", opts, { desc = "Aligned Comment" })
--- Биндим на G (раз ты переназначил навигацию)
-map('n', 'G', aligned_comment, key_opts)
 
--- Функции сдвига комментариев влево и вправо
+-- ======== Функции сдвига комментариев на отступе =========
 local function move_comment(dir)
     local line = vim.api.nvim_get_current_line()
     local cms = vim.bo.commentstring
     if not cms or cms == "" then cms = "# %s" end
     local comment_char = vim.trim(vim.split(cms, "%s")[1])
+
     -- 0. Ищем комментарий (как в aligned_comment)
     local rev_line = line:reverse()
     local rev_char = comment_char:reverse()
     local s_rev_start, s_rev_end = rev_line:find(rev_char, 1, true)
     if not s_rev_start then return end -- Комментария нет, выходим
+
     -- 1. Разделяем код и комментарий
     local s_start = #line - s_rev_end + 1
     local content_before = line:sub(1, s_start - 1)
     -- Если "код" пустой (строка-комментарий), не двигаем
     if content_before:match("^%s*$") then return end
-
     local clean_code = content_before:match("^(.*%S)") or ""
     local comment_part = line:sub(s_start)
 
@@ -75,7 +72,6 @@ local function move_comment(dir)
 
     -- 3. Вычисляем цель
     local target_col = current_col + (dir * 2)
-
     -- Выравнивание по нечётной сетке (51, 53...), если не уперлись в код
     if target_col % 2 == 0 then
         target_col = target_col + 1 -- Всегда сдвигаем на +1 для нечётности
@@ -86,16 +82,13 @@ local function move_comment(dir)
     if target_col < min_col then
         target_col = min_col       -- Тут сетка может нарушиться ради 1 пробела
     end
-    
     -- Если позиция не изменилась (уперлись), ничего не обновляем
     if target_col == current_col then return end
 
     -- 5. Сборка строки
     local spaces_count = target_col - code_width - 1
     local new_line = clean_code .. string.rep(" ", spaces_count) .. comment_part
-    
     vim.api.nvim_set_current_line(new_line)
-    
     -- Опционально: двигаем курсор вместе с текстом, если он был на строке
     local cur = vim.api.nvim_win_get_cursor(0)
     if cur[2] >= #clean_code then
@@ -103,9 +96,8 @@ local function move_comment(dir)
     end
 end
 
--- ==================== Bindings ====================
--- Используем <M-,> (Alt + <) и <M-.> (Alt + >)
--- Так как < и > часто требуют шифта, биндим на запятую и точку с Alt
-
+-- ==================== Горячие клавиши ====================
+map('n', 'z', function() require('Comment.api').toggle.linewise.current() end, opts)
+map('n', 'Z', aligned_comment, key_opts)
 map({'n', 'i'}, '<M-,>', function() move_comment(-1) end, { desc = "Move comment Left" })
 map({'n', 'i'}, '<M-.>', function() move_comment(1) end,  { desc = "Move comment Right" })

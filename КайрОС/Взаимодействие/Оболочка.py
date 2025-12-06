@@ -11,7 +11,7 @@ class Hyprland:
         # Пути к сокетам
         self.hypr_event_socket = f"/tmp/hypr/{signature}/.socket2.sock"
         self.my_command_socket = os.path.expanduser("~/.kayros.sock")
-
+        
         # ЕДИНАЯ ОЧЕРЕДЬ ИСПОЛНЕНИЯ
         # Гарантирует, что команды летят в Hyprland строго по одной
         self._dispatch_queue = asyncio.Queue()
