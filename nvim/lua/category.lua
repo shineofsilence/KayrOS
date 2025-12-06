@@ -55,4 +55,6 @@ end
 
 -- ==================== Горячие клавиши ====================
 map('n', 'x', function() create_section_comment(false) end, opts) -- Малый (-)
+map('n', 'ч', function() create_section_comment(false) end, opts) -- Малый (-)
 map('n', 'X', function() create_section_comment(true) end, opts)  -- Большой (=)
+map('n', 'Ч', function() create_section_comment(true) end, opts)  -- Большой (=)

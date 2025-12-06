@@ -1,6 +1,17 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
 
+-- ====== Безопасное определение символа комментария =======
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "*", -- Срабатывает для ВСЕХ типов файлов
+    callback = function()
+        -- Если переменная пуста (система не знает тип комментов)
+        if vim.bo.commentstring == "" then
+            vim.bo.commentstring = "# %s"
+        end
+    end,
+})
+
 -- ======== Функция создания комментария на отступе ========
 local function aligned_comment()
     -- -------------------- Подготовка данных --------------------
@@ -154,7 +165,10 @@ end
 
 -- ==================== Горячие клавиши ====================
 map('n', 'z', function() require('Comment.api').toggle.linewise.current() end, opts)
+map('n', 'я', function() require('Comment.api').toggle.linewise.current() end, opts)
 map('n', 'Z', aligned_comment, key_opts)
+map('n', 'Я', aligned_comment, key_opts)
 map({'n', 'i'}, '<M-,>', function() move_comment(-1) end, { desc = "Move comment Left" })
 map({'n', 'i'}, '<M-.>', function() move_comment(1) end,  { desc = "Move comment Right" })
 map('v', 'z', toggle_visual_comment, opts)
+map('v', 'я', toggle_visual_comment, opts)
