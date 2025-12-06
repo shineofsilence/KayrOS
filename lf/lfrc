@@ -24,57 +24,70 @@ cmd open %{{
 }}
 
 # ===================== ГОРЯЧИЕ КЛАВИШИ =======================
+# --------------------- Навигация ----------------------
+# Вниз
+map j down
+map J 3j                                          # Смещение на 3 строки
+map u half-down                                   # Полстраницы вниз
+map U bottom                                      # Конец списка
 
-map . set hidden!                       # Переключить видимость скрытых файлов
-map <enter> open                        # Открыть файл
+# Вверх
+map k up
+map K 3k                                          # Смещение на 3 строки
+map i half-up                                     # Полстраницы вверх
+map I top                                         # Начало списка
 
-# -------------- Не открывать файлы по L ---------------
+# Не открывать файлы по l 
 cmd enter-dir %{{
     if [ -d "$f" ]; then
         lf -remote "send $id open"
     fi
 }}
 map l enter-dir
-  
-# ------------- Создание файла (права 644) -------------
+
+# ---------------------- Операции ----------------------
 cmd touch %{{
     touch "$@"
     chmod 644 "$@"
 }}
-map n push :touch<space>
+map g push :touch<space>                          # Создать файл (права 644)
 
-# ------------- Создание папки (права 755) -------------
 cmd mkdir %{{
     mkdir -p -m 755 "$@"
 }}
-map N push :mkdir<space>
+map G push :mkdir<space>                          # Создать папку (права 755)
 
-# ------------- Создание символьных ссылок -------------
 cmd ln %{{
     ln "$@"
 }}
-map L push :ln -s --relative<space>
+map L push :ln -s --relative<space>               # Создать символьные ссылки
 
-# -------------- Сделать исполняемым (+x) --------------
 cmd chmod-exec %{{
     chmod +x "$f"
     lf -remote "send $id reload"
 }}
-map x chmod-exec
+map x chmod-exec                                  # Сделать исполняемым
 
-# ------------------- Переименовать --------------------
-map r rename
-
-# ------------- Удаление с подтверждением --------------
-map D push :delete<enter>         
-
-# ---------------- Мгновенное удаление -----------------
+map <enter> open                                  # Открыть файл
+map t rename                                      # Переименовать
+map f toggle                                      # Выделить/Снять (текущий)
+map F unselect                                    # Снять выделение со всего
+map c copy                                        # Копировать
+map C cut                                         # Вырезать
+map v paste                                       # Вставить
+map . set hidden!                                 # Переключить видимость скрытых файлов
+map d push :delete<enter>                         # Удаление с подтверждением
 cmd delete-now %{{
     rm -rf "$fx"
     lf -remote "send $id reload"
 }}
-map <delete> delete-now           # Удалить (клавиша Del)
+map D delete-now                                  # Мгновенное удаление без подтверждения
+map q quit                                        # Выйти из файлового менеджера
 
-# -------------------- Выйти из LF ---------------------
-map q quit
+# ----------------------- Поиск ------------------------
+set globsearch false                              # Отключаем glob (*), включаем Regex
+# set incsearch true                                # Инкрементальный поиск (показывает сразу)
+set ignorecase true                               # Игнорировать регистр
+map m find-next                                   # Найти следующее совпадение
+map M find-prev                                   # Найти предыдущее совпадение
 
