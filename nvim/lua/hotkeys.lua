@@ -97,25 +97,54 @@ map('v', 'd', 'd', opts)                          -- Удалить
 map('v', 'D', 'Vd', opts)                         -- Удалить строки
 
 -- ------------------- Режим обзора --------------------
-map('n', 'v', 'p', opts)                          -- Вставить из буфера после
-map('n', 'V', 'P', opts)                          -- Вставить из буфера до
+-- Вспомогательная функция действия с подсловами
+local function spider_object_action(action_key)
+    local line = vim.api.nvim_get_current_line()
+    local col = vim.api.nvim_win_get_cursor(0)[2] -- 0-based колонка
+    local char = line:sub(col + 1, col + 1)
+    -- 1. Если стоим на пробеле/табе - прыгаем к началу следующего слова
+    if char:match("%s") then
+        require("spider").motion("w")
+    end
+    -- 2. Алгоритм выделения объекта (Word Object)
+    require("spider").motion("e")
+    vim.cmd("normal! v")
+    require("spider").motion("b")
+    -- 3. Выполняем действие
+    vim.api.nvim_feedkeys(action_key, "n", true)
+end
 
+-- ------------------- Редактировать -------------------
 map('n', 'aw', 'i', opts)                         -- Редактировать до символа
-map('n', 'ae', 'ea', opts)                        -- Редактировать после слова
+map('n', 'ae', function()                         -- Редактировать после слова
+    -- Если на пробеле - идем к следующему слову
+    local col = vim.api.nvim_win_get_cursor(0)[2]
+    local char = vim.api.nvim_get_current_line():sub(col + 1, col + 1)
+    if char:match("%s") then
+        require("spider").motion("w")
+    end
+    -- Идем в конец и входим в insert
+    require("spider").motion("e")
+    vim.api.nvim_feedkeys("a", "n", true)
+end, opts)
 map('n', 'ar', 'A', opts)                         -- Редактировать в конце строки
 
+-- -------------------- Копировать ---------------------
 map('n', 'cw', 'yl', opts)                        -- Копировать символ
-map('n', 'ce', 'yiw', opts)                       -- Копировать слово
+map('n', 'ce', function() spider_object_action('y') end, opts) -- Копировать слово
 map('n', 'cr', 'yy', opts)                        -- Копировать строку
 
+-- ------------------ Корректировать -------------------
 map('n', 'sw', 's', opts)                         -- Корректировать символ
-map('n', 'se', 'ciw', opts)                       -- Корректировать слово
+map('n', 'se', function() spider_object_action('c') end, opts) -- Корректировать слово
 map('n', 'sr', 'cc', opts)                        -- Корректировать строку
 
+-- ---------------------- Удалить ----------------------
 map('n', 'dw', 'x', opts)                         -- Удалить символ
-map('n', 'de', 'diw', opts)                       -- Удалить слово
+map('n', 'de', function() spider_object_action('d') end, opts) -- Удалить слово
 map('n', 'dr', 'dd', opts)                        -- Удалить строку
 
+-- -------- Действия внутри парных спецсимволов --------
 for _, sym in ipairs(symbols) do
     local text_obj = sym
     if sym == "{" or sym == "}" then text_obj = "B" end
@@ -125,6 +154,9 @@ for _, sym in ipairs(symbols) do
     map('n', 'd' .. sym, 'di' .. text_obj, opts)              -- Удалить
     map('n', 'a' .. sym, 'vi' .. text_obj .. '<Esc>a', opts)  -- Редактировать после содержимого
 end
+-- ---------------------- Вставка ----------------------
+map('n', 'v', 'p', opts)                          -- Вставить из буфера после
+map('n', 'V', 'P', opts)                          -- Вставить из буфера до
 
 -- --------------- Вставка пустых строк ----------------
 local function smart_newline(direction)
@@ -134,7 +166,6 @@ local function smart_newline(direction)
     -- "Воруем" отступ (всё от начала строки до первого непробельного символа)
     local indent = line:match("^(%s*)") or ""
     -- Определяем позицию вставки
-    -- API nvim_buf_set_lines использует 0-индексацию
     local start_row = (direction == 'below') and r or r - 1
     -- Вставляем строку с отступом
     vim.api.nvim_buf_set_lines(0, start_row, start_row, false, {indent})

@@ -5,7 +5,7 @@ package.path = package.path .. ';' .. config_path .. '/lua/?.lua'
 vim.g.mapleader = ' '                             -- Устанавливаем <Leader> на пробел
 local opt = vim.opt                               -- Переопределяем для сокращения
 vim.g.maplocalleader = ' '                        -- Локально тоже
-opt.timeoutlen = 1000                             -- Задержка команды
+opt.timeoutlen = 700                              -- Задержка команды
 opt.autowrite = true                              -- Автоматически сохранять при переключении буферов
 opt.clipboard = 'unnamedplus'                     -- Использовать системный буфер обмена
 opt.completeopt = 'menu,menuone,noselect'
@@ -178,6 +178,10 @@ require('lazy').setup({
             local cmp = require('cmp')
             local luasnip = require('luasnip')
             cmp.setup({
+                -- ОТКЛЮЧАЕМ автоматическое выпадение
+                completion = {
+                    autocomplete = false 
+                },
                 snippet = {
                     expand = function(args)
                         luasnip.lsp_expand(args.body)

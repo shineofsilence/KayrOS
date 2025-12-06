@@ -96,8 +96,65 @@ local function move_comment(dir)
     end
 end
 
+-- ========== Комментирование в режиме выделения ===========
+local function toggle_visual_comment()
+    -- 1. Получаем границы выделения
+    local l_start = vim.fn.line("v")
+    local l_end = vim.fn.line(".")
+    if l_start > l_end then l_start, l_end = l_end, l_start end
+
+    -- 2. Читаем строки
+    -- API использует 0-индексацию, поэтому start-1
+    local lines = vim.api.nvim_buf_get_lines(0, l_start - 1, l_end, false)
+
+    -- 3. Определяем символ комментария
+    local cms = vim.bo.commentstring
+    if not cms or cms == "" then cms = "# %s" end
+    local comment_char = vim.trim(vim.split(cms, "%s")[1])
+    -- Экранируем спецсимволы для Lua паттернов (например, -, *, +)
+    local esc_char = comment_char:gsub("([^%w])", "%%%1")
+
+    -- 4. Анализ состояния: Все ли строки закомментированы?
+    local all_commented = true
+    for _, line in ipairs(lines) do
+        -- Игнорируем пустые строки при проверке
+        if not line:match("^%s*$") then
+            -- Проверяем: Начало строки + Пробелы + Символ комментария
+            if not line:match("^%s*" .. esc_char) then
+                all_commented = false
+                break
+            end
+        end
+    end
+
+    -- 5. Обработка строк
+    local new_lines = {}
+    for _, line in ipairs(lines) do
+        if line:match("^%s*$") then
+            table.insert(new_lines, line) -- Пустые не трогаем
+        else
+            if all_commented then
+                -- РАСКОММЕНТИРОВАТЬ
+                -- Паттерн: (Отступ)(Символ)(Возможный пробел)(Остаток)
+                local indent, content = line:match("^(%s*)" .. esc_char .. "%s?(.*)")
+                table.insert(new_lines, indent .. (content or ""))
+            else
+                -- ЗАКОММЕНТИРОВАТЬ
+                -- Сохраняем отступ, вставляем символ + пробел
+                local indent, content = line:match("^(%s*)(.*)")
+                table.insert(new_lines, indent .. comment_char .. " " .. content)
+            end
+        end
+    end
+
+    -- 6. Применяем изменения и выходим в Normal mode
+    vim.api.nvim_buf_set_lines(0, l_start - 1, l_end, false, new_lines)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+end
+
 -- ==================== Горячие клавиши ====================
 map('n', 'z', function() require('Comment.api').toggle.linewise.current() end, opts)
 map('n', 'Z', aligned_comment, key_opts)
 map({'n', 'i'}, '<M-,>', function() move_comment(-1) end, { desc = "Move comment Left" })
 map({'n', 'i'}, '<M-.>', function() move_comment(1) end,  { desc = "Move comment Right" })
+map('v', 'z', toggle_visual_comment, opts)
