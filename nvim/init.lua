@@ -23,6 +23,7 @@ opt.ignorecase = true                             -- Игнорировать р
 opt.smartcase = true                              -- Если в поиске есть заглавная буква, искать с учетом регистра
 opt.fileformat = 'unix'                           -- Формат файлов из unix-систем
 opt.termguicolors = true                          -- Включить 24-битные цвета
+opt.signcolumn = "number"                         -- Предупреждения поверх номеров строк
 
 -- ==================== Кай-управление =====================
 require('hotkeys')                                -- Горячие клавиши
@@ -91,9 +92,37 @@ require('lazy').setup({
                         visible = true,
                         hide_dotfiles = false,
                     }
+                },
+                -- Настройка управления
+                window = {
+                    mappings = {
+                        -- ================= Навигация =================
+                        ["l"] = "open",           -- Открыть файл / Раскрыть папку
+                        ["д"] = "open",           -- Открыть файл / Раскрыть папку
+                        ["h"] = "close_node",     -- Закрыть папку / Подняться выше
+                        ["р"] = "close_node",     -- Закрыть папку / Подняться выше
+                        ["S"] = "none",           -- Отключаем сплиты
+                        ["s"] = "none",           -- Отключаем сплиты
+
+                        -- ================= Операции =================
+                        ["g"] = "add",            -- Создать новый файл/папку
+                        ["п"] = "add",            -- Создать новый файл/папку
+                        ["t"] = "rename",         -- Переименовать
+                        ["е"] = "rename",         -- Переименовать
+                        ["c"] = "copy_to_clipboard", -- Копировать
+                        ["с"] = "copy_to_clipboard", -- Копировать
+                        ["x"] = "cut_to_clipboard", -- Вырезать
+                        ["ч"] = "cut_to_clipboard", -- Вырезать
+                        ["d"] = "delete",         -- Удалить
+                        ["в"] = "delete",         -- Удалить
+                        ["v"] = "paste_from_clipboard", -- Вставить
+                        ["м"] = "paste_from_clipboard", -- Вставить
+                        ["r"] = "refresh",        -- Обновить дерево
+                        ["к"] = "refresh",        -- Обновить дерево
+                        ["?"] = "show_help",      -- Помощь
+                    }
                 }
             })
-            vim.keymap.set('n', '<leader>e', '<cmd>Neotree toggle<CR>', { desc = 'Toggle Neo-tree' })
         end,
     },
 
@@ -118,16 +147,7 @@ require('lazy').setup({
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
             -- 3. Общая функция on_attach
-            local on_attach = function(client, bufnr)
-                local nmap = function(keys, func, desc)
-                    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = 'LSP: ' .. desc, silent = true })
-                end
-                nmap('<leader>R', vim.lsp.buf.rename, 'Rename')
-                nmap('<leader>a', vim.lsp.buf.code_action, 'Code Action')
-                nmap('gd', vim.lsp.buf.definition, 'Go to Definition')
-                nmap('gr', function() require('telescope.builtin').lsp_references() end, 'Go to References')
-                nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-            end
+            local on_attach = function(client, bufnr) end
 
             -- 4. Настраиваем Mason-LSPConfig
             require('mason-lspconfig').setup({
@@ -241,11 +261,40 @@ require('lazy').setup({
     {
         'nvim-telescope/telescope.nvim',
         dependencies = { 'nvim-lua/plenary.nvim' },
-        keys = {
-            { '<leader>f', function() require('telescope.builtin').find_files() end, desc = 'Find Files' },
-            { '<leader>g', function() require('telescope.builtin').live_grep() end, desc = 'Live Grep' },
-            { '<leader>b', function() require('telescope.builtin').buffers() end, desc = 'Buffers' },
-        },
+        config = function()
+            local actions = require('telescope.actions')
+            require('telescope').setup({
+                defaults = {
+                    -- Навигация внутри окна (работает и в Insert, и в Normal режиме окна)
+                    mappings = {
+                        i = { -- Режим ввода (по умолчанию)
+                            -- Вниз (j / о)
+                            ["<M-j>"] = actions.move_selection_next,
+                            ["<M-о>"] = actions.move_selection_next,
+                            -- Вверх (k / л)
+                            ["<M-k>"] = actions.move_selection_previous,
+                            ["<M-л>"] = actions.move_selection_previous,
+                            -- Выбрать (l / д) -> Select Default
+                            ["<M-l>"] = actions.select_default,
+                            ["<M-д>"] = actions.select_default,
+                            -- Закрыть (p / з)
+                            ["<M-p>"] = actions.close,
+                            ["<M-з>"] = actions.close,
+                        },
+                        n = { -- Normal режим (если вдруг нажмешь Esc внутри)
+                            ["<M-j>"] = actions.move_selection_next,
+                            ["<M-о>"] = actions.move_selection_next,
+                            ["<M-k>"] = actions.move_selection_previous,
+                            ["<M-л>"] = actions.move_selection_previous,
+                            ["<M-l>"] = actions.select_default,
+                            ["<M-д>"] = actions.select_default,
+                            ["<M-p>"] = actions.close,
+                            ["<M-з>"] = actions.close,
+                        },
+                    },
+                },
+            })
+        end,
     },
 
     -- ---------- Плагин добавления комментариев -----------

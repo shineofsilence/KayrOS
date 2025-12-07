@@ -7,7 +7,7 @@ local cmd_opts = { noremap = true, silent = false }
 local symbols = { "'", '"', "(", ")", "[", "]", "{", "}" }
 
 -- ==================== Чистота расы ====================
-local alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+local alphabet = "abcdefghijklmnoqrsuvwxyzABCDEFGHIJKLMNORSTUVWXYZ"
 for i = 1, #alphabet do
     local char = alphabet:sub(i, i)
     map({'n', 'v'}, char, '<Nop>', opts)
@@ -16,7 +16,7 @@ end
 -- ============ Переопределяем далёкие клавиши ==========
 map({'i', 'v', 'c'}, '<M-p>', '<Esc>', opts)      -- Выход в обзорный режим
 map({'i', 'v', 'c'}, '<M-з>', '<Esc>', opts)      -- Выход в обзорный режим
--- --------------------- ловаввврр ---------------------
+
 -- ------------------ Обзорный режим -------------------
 map('n', '<M-j>', 'X', opts)                      -- Backspace
 map('n', '<M-о>', 'X', opts)                      -- Backspace
@@ -52,39 +52,61 @@ map('c', '<M-k>', '<Del>', cmd_opts)              -- Delete
 map('c', '<M-л>', '<Del>', cmd_opts)              -- Delete
 
 -- ====================== Перемещение ======================
--- ---------------------- Вправо -----------------------
+-- ------------------ Горизонтальное -------------------
 map({'n', 'v'}, 'h', 'h', opts)                   -- Вправо на символ
 map({'n', 'v'}, 'р', 'h', opts)                   -- Вправо на символ
-map({'n', 'o', 'x'}, 'H', function() require("spider").motion("b") end, opts) -- Вправо по началам слов
-map({'n', 'o', 'x'}, 'Р', function() require("spider").motion("b") end, opts) -- Вправо по началам слов
-map({'n', 'v'}, 'y', '^', opts)                   -- В начало строки (первый символ)
-map({'n', 'v'}, 'н', '^', opts)                   -- В начало строки (первый символ)
+map({'n', 'v'}, 'H', '^', opts)                   -- В начало строки (первый символ)
+map({'n', 'v'}, 'Р', '^', opts)                   -- В начало строки (первый символ)
+map({'n', 'v'}, 'y', function() require("spider").motion("b") end, opts) -- Вправо по началам слов
+map({'n', 'v'}, 'н', function() require("spider").motion("b") end, opts) -- Вправо по началам слов
+map({'n', 'v'}, 'Y', function() require("spider").motion("ge") end, opts) -- Вправо по концам слов
+map({'n', 'v'}, 'Н', function() require("spider").motion("ge") end, opts) -- Вправо по концам слов
 
--- ----------------------- Влево -----------------------
 map({'n', 'v'}, 'l', 'l', opts)                   -- Влево на символ
 map({'n', 'v'}, 'д', 'l', opts)                   -- Влево на символ
-map({'n', 'o', 'x'}, 'L', function() require("spider").motion("w") end, opts) -- Влево по началам слов
-map({'n', 'o', 'x'}, 'Д', function() require("spider").motion("w") end, opts) -- Влево по началам слов
-map({'n', 'v'}, 'o', '$', opts)                   -- В конец строки
-map({'n', 'v'}, 'щ', '$', opts)                   -- В конец строки
+map({'n', 'v'}, 'L', '$', opts)                   -- В конец строки
+map({'n', 'v'}, 'Д', '$', opts)                   -- В конец строки
+map({'n', 'v'}, 'o', function() require("spider").motion("w") end, opts) -- Влево по началам слов
+map({'n', 'v'}, 'щ', function() require("spider").motion("w") end, opts) -- Влево по началам слов
+map({'n', 'v'}, 'O', function() require("spider").motion("e") end, opts) -- Влево по концам слов
+map({'n', 'v'}, 'Щ', function() require("spider").motion("e") end, opts) -- Влево по концам слов
 
--- ----------------------- Вверх -----------------------
+-- ------------------- Вертикальное --------------------
+-- Функция ищет ближайшую "визуально пустую" строку (включая строки с отступами)
+local function smart_paragraph(dir, is_visual)
+    -- Если мы в Visual mode, нужно восстановить выделение (gv),
+    -- иначе вызов функции сбросит его
+    if is_visual then vim.cmd("normal! gv") end
+    -- Добавляем текущую позицию в Jumplist (чтобы работать с Ctrl-o)
+    vim.cmd("normal! m'")
+    -- Направление поиска
+    local flags = 'W' -- 'W' = не зацикливаться (Stop at EOF)
+    if dir == -1 then flags = 'bW' end -- 'b' = backward (назад)
+    
+    -- Паттерн: ^ (начало) \s* (любое кол-во пробелов) $ (конец)
+    -- \v включает "very magic" режим для регулярки
+    vim.fn.search([[\v^\s*$]], flags)
+end
+
 map({'n', 'v'}, 'k', 'k', opts)                   -- Вверх к началу строки
 map({'n', 'v'}, 'л', 'k', opts)                   -- Вверх к началу строки
 map({'n', 'v'}, 'K', '3k', opts)                  -- 3 строки вверх к началу
 map({'n', 'v'}, 'Л', '3k', opts)                  -- 3 строки вверх к началу
-map({'n', 'v'}, 'u', '}', opts)                   -- Параграф вверх
-map({'n', 'v'}, 'г', '}', opts)                   -- Параграф вверх
+map('n', 'u', function() smart_paragraph(1, false) end, opts)
+map('n', 'г', function() smart_paragraph(1, false) end, opts)
+map('v', 'u', function() smart_paragraph(1, true) end, opts)
+map('v', 'г', function() smart_paragraph(1, true) end, opts)
 map({'n', 'v'}, 'U', 'G', opts)                   -- В начало файла
 map({'n', 'v'}, 'Г', 'G', opts)                   -- В начало файла
 
--- ----------------------- Вниз ------------------------
 map({'n', 'v'}, 'j', 'j', opts)                   -- Вниз к началу строки
 map({'n', 'v'}, 'о', 'j', opts)                   -- Вниз к началу строки
 map({'n', 'v'}, 'J', '3j', opts)                  -- 3 строки вниз к началу
 map({'n', 'v'}, 'О', '3j', opts)                  -- 3 строки вниз к началу
-map({'n', 'v'}, 'i', '{', opts)                   -- Параграф вниз
-map({'n', 'v'}, 'ш', '{', opts)                   -- Параграф вниз
+map('n', 'i', function() smart_paragraph(-1, false) end, opts)
+map('n', 'ш', function() smart_paragraph(-1, false) end, opts)
+map('v', 'i', function() smart_paragraph(-1, true) end, opts)
+map('v', 'ш', function() smart_paragraph(-1, true) end, opts)
 map({'n', 'v'}, 'I', 'gg', opts)                  -- В конец файла
 map({'n', 'v'}, 'Ш', 'gg', opts)                  -- В конец файла
 
@@ -124,10 +146,14 @@ map('n', 'm', 'n', opts)                          -- Следующее совп
 map('n', 'ь', 'n', opts)                          -- Следующее совпадение
 map('n', 'M', 'N', opts)                          -- Предыдущее совпадение
 map('n', 'Ь', 'N', opts)                          -- Предыдущее совпадение
+map('n', 'q', '<cmd>nohl<CR>', opts)              -- Снять выделение поиска
+map('n', 'й', '<cmd>nohl<CR>', opts)              -- Снять выделение поиска
 
 -- ---------------------- Сдвиги -----------------------
 map('n', '<', '<<', opts)                         -- Сдвиг вправо
 map('n', '>', '>>', opts)                         -- Сдвиг влево
+map('v', '<', '<gv', opts)                        -- Сдвиг блока вправо
+map('v', '>', '>gv', opts)                        -- Сдвиг блока влево
 
 -- ------------------ Дерево проекта -------------------
 map('n', 'n', '<C-w>w', opts)                     -- Переключить фокус (Файл <-> Дерево)
@@ -173,6 +199,8 @@ end
 -- ------------------- Редактировать -------------------
 map('n', 'aw', 'i', opts)                         -- Редактировать до символа
 map('n', 'фц', 'i', opts)                         -- Редактировать до символа
+map('n', 'A', 'a', opts)                          -- Редактировать после символа
+map('n', 'Ф', 'a', opts)                          -- Редактировать после символа
 local function edit_after_word()
     -- Если на пробеле - идем к следующему слову
     local col = vim.api.nvim_win_get_cursor(0)[2]
@@ -255,12 +283,24 @@ map('n', 'п', function() smart_newline('below') end, opts)  -- Пустая с�
 map('n', 'G', function() smart_newline('above') end, opts)  -- Пустая строка до
 map('n', 'П', function() smart_newline('above') end, opts)  -- Пустая строка до
 
--- ---------------------- Разное -----------------------
-map('n', 'q', '<cmd>nohl<CR>', opts)                         -- Снять выделение поиска
-map('n', 'й', '<cmd>nohl<CR>', opts)                         -- Снять выделение поиска
-map('n', 't', vim.lsp.buf.rename, opts)                      -- Переименовать переменную
-map('n', 'е', vim.lsp.buf.rename, opts)                      -- Переименовать переменную
-map('n', 'b', 'u', opts)                                     -- Отмена действия (Undo)
-map('n', 'и', 'u', opts)                                     -- Отмена действия (Undo)
-map('n', 'B', '<C-r>', opts)                                 -- Повтор действия (Redo)
-map('n', 'И', '<C-r>', opts)                                 -- Повтор действия (Redo)
+-- --------------- Языковой сервер (LSP) ---------------
+map('n', 'P', vim.lsp.buf.definition, opts)       -- Перейти к определению
+map('n', 'З', vim.lsp.buf.definition, opts)       -- Перейти к определению
+map('n', 'p', function() require('telescope.builtin').lsp_references() end, opts) -- Поиск использований
+map('n', 'з', function() require('telescope.builtin').lsp_references() end, opts) -- Поиск использований
+map('n', '<M-t>', vim.lsp.buf.hover, opts)        -- Документация
+map('n', '<M-е>', vim.lsp.buf.hover, opts)        -- Документация
+map('n', 't', vim.lsp.buf.rename, opts)           -- Переименование
+map('n', 'е', vim.lsp.buf.rename, opts)           -- Переименование
+map('n', 'T', vim.lsp.buf.code_action, opts)      -- Действия
+map('n', 'Е', vim.lsp.buf.code_action, opts)      -- Действия
+
+-- -------------- Отмена/повтор действий ---------------
+map('n', 'b', 'u', opts)                          -- Отмена действия (Undo)
+map('n', 'и', 'u', opts)                          -- Отмена действия (Undo)
+map('n', 'B', '<C-r>', opts)                      -- Повтор действия (Redo)
+map('n', 'И', '<C-r>', opts)                      -- Повтор действия (Redo)
+map('n', '<M-b>', '<C-o>', opts)                  -- Назад по цепочке файлов
+map('n', '<M-и>', '<C-o>', opts)                  -- Назад по цепочке файлов
+map('n', '<M-B>', '<C-i>', opts)                  -- Вперёд по цепочке файлов
+map('n', '<M-И>', '<C-i>', opts)                  -- Вперёд по цепочке файлов

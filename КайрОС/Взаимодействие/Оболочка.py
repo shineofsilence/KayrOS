@@ -50,7 +50,7 @@ class Hyprland:
         if os.path.exists(self.my_command_socket):
             os.remove(self.my_command_socket)
             
-        server = await asyncio.sjart_server(
+        server = await asyncio.start_server(
             self._handle_ipc_client, path=self.my_command_socket
         )
         # Сервер работает фоном внутри Loop
