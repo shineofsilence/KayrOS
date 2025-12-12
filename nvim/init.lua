@@ -143,13 +143,23 @@ require('lazy').setup({
             -- 1. Инициализируем Mason
             require('mason').setup()
 
-            -- 2. Настраиваем "Capabilities"
+            -- 2. Указываем искать корень проекта в текущей папке
+            local util = require('lspconfig.util')
+            util.default_config.root_dir = function(fname)
+                -- 1. Сначала ищем стандартные маркеры (.git, package.json и т.д.)
+                local found = util.root_pattern(".git", "package.json", "Makefile", "pyproject.toml", "gleam.toml")(fname)
+                -- 2. Если маркеров нет — возвращаем текущую рабочую папку (cwd)
+                -- Это предотвращает панику сервера
+                return found or vim.loop.cwd()
+            end
+
+            -- 3. Настраиваем "Capabilities"
             local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-            -- 3. Общая функция on_attach
+            -- 4. Общая функция on_attach
             local on_attach = function(client, bufnr) end
 
-            -- 4. Настраиваем Mason-LSPConfig
+            -- 5. Настраиваем Mason-LSPConfig
             require('mason-lspconfig').setup({
                 -- ----------- Список LSP-серверов от mason ------------
                 ensure_installed = {

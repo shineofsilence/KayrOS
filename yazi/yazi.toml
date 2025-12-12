@@ -1,0 +1,43 @@
+# ==================== НАСТРОЙКИ МЕНЕДЖЕРА ====================
+[mgr]
+ratio          = [ 1, 4, 3 ]    # Пропорции колонок (Родитель, Текущая, Превью)
+sort_by        = "natural"
+sort_sensitive = false          # Игнорировать регистр (как у тебя было set ignorecase true)
+sort_reverse   = false
+sort_dir_first = true
+linemode       = "size"         # Показывать размер файлов по умолчанию (как set info size)
+show_hidden    = false          # Скрытые файлы выключены по умолчанию
+
+# ==================== ПРОГРАММЫ (OPENERS) ====================
+[opener]
+edit = [
+    { run = 'nvim "$@"', block = true }
+]
+play = [
+    { run = 'mpv --force-window "$@"', orphan = true }
+]
+image = [
+    { run = 'imv "$@"', orphan = true }
+]
+pdf = [
+    { run = 'zathura "$@"', orphan = true }
+]
+open = [
+    { run = 'xdg-open "$@"', desc = "Open", orphan = true }
+]
+
+# ==================== АССОЦИАЦИИ ====================
+[open]
+rules = [
+    { name = "*/folder", use = "edit" }, # Папки не открываем как текст, это заглушка
+    { mime = "text/*", use = "edit" },
+    { mime = "image/*", use = "image" },
+    { mime = "video/*", use = "play" },
+    { mime = "audio/*", use = "play" },
+    { mime = "application/pdf", use = "pdf" },
+    { mime = "application/json", use = "edit" },
+    { mime = "application/xml", use = "edit" },
+    # Дефолт для всего остального
+    { name = "*", use = "edit" },
+]
+

@@ -14,6 +14,7 @@ format = """
 [▓](fg:#4fffd3)\
 [ 󰠃 ](bg:#4fffd3 fg:#1d2230)\
 $directory\
+$container\
 [](fg:#4fffd3 bg:#8fc91e)\
 $git_branch\
 $git_status\
@@ -33,6 +34,11 @@ style = "bg:#4fffd3 fg:#1d2230 bold"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
+
+[container]
+disabled = false
+style = "bg:#4fffd3 fg:#e06c75 bold"
+format = "[ 󰏖 $name ]($style)"
 
 [git_branch]
 style = "bg:#8fc91e fg:#1d2230 bold"

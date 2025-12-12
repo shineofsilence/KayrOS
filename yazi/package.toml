@@ -1,0 +1,14 @@
+[[plugin.deps]]
+use = "yazi-rs/plugins:git"
+rev = "19dc890"
+hash = "27ca02f49fd236b5cc7bf03c243859fe"
+
+[[flavor.deps]]
+use = "AdithyanA2005/nord"
+rev = "3a791e9"
+hash = "fa7142cda74a50b271ea212356b40b57"
+
+[[flavor.deps]]
+use = "yazi-rs/flavors:dracula"
+rev = "ffe6e3a"
+hash = "5d16bf24ca0980168814fc1abd307c07"
