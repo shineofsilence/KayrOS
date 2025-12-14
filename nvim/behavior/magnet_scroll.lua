@@ -1,6 +1,6 @@
 -- ==================== Магнитный Горизонтальный Скролл ====================
 vim.opt.sidescrolloff = 0                         -- Отключаем стандартный скролл
-local scroll_grp = vim.api.nvim_create_augroup("MagneticScroll", { clear = true })
+local scroll_grp = vim.api.nvim_create_augroup("KayMagneticScroll", { clear = true })
 
 vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = scroll_grp,

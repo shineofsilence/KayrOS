@@ -1,5 +1,8 @@
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
 local config_path = vim.fn.stdpath('config')
-package.path = package.path .. ';' .. config_path .. '/lua/?.lua'
+package.path = package.path .. ';' .. config_path .. '/behavior/?.lua'
+package.path = package.path .. ';' .. config_path .. '/controls/?.lua'
 
 -- =================== Базовые настройки ===================
 vim.g.mapleader = ' '                             -- Устанавливаем <Leader> на пробел
@@ -12,7 +15,6 @@ opt.completeopt = 'menu,menuone,noselect'
 opt.confirm = true                                -- Спрашивать подтверждение, если есть несохраненные изменения
 opt.undofile = true                               -- Сохранять историю изменений между сессиями
 opt.mouse = 'a'                                   -- Включить поддержку мыши во всех режимах
-opt.wrap = false                                  -- Отключить перенос строк
 opt.cursorline = true                             -- Подсвечивать текущую строку
 opt.number = true                                 -- Показывать номера строк
 opt.expandtab = true                              -- Использовать пробелы вместо табуляции
@@ -24,12 +26,20 @@ opt.smartcase = true                              -- Если в поиске е
 opt.fileformat = 'unix'                           -- Формат файлов из unix-систем
 opt.termguicolors = true                          -- Включить 24-битные цвета
 opt.signcolumn = "number"                         -- Предупреждения поверх номеров строк
+require('text_files')                             -- Перенос строк в текстовых файлах
+require('magnet_scroll')                          -- Магнитный горизонтальный скролл
 
 -- ==================== Кай-управление =====================
-require('hotkeys')                                -- Горячие клавиши
-require('comment')                                -- Добавление комментариев
-require('category')                               -- Обозначение разделов и подразделов
-require('magnet_scroll')                          -- Магнитный горизонтальный скролл
+-- ------------------- Чистота РАСЫ --------------------
+local alphabet = "abcdefghijklmnoqrsuvwxyzABCDEFGHIJKLMNORSTUVWXYZ"
+for i = 1, #alphabet do
+    local char = alphabet:sub(i, i)
+    map({'n', 'v', 'x'}, char, '<Nop>', opts)
+end
+require('far_keys')                               -- Далёкие клавиши
+require('movement')                               -- Перемещение
+require('actions')                                -- Действия
+require('formatting')                             -- Форматирование
 
 -- ========= Установка менеджера плагинов LazyVim ==========
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -335,3 +345,4 @@ require('lazy').setup({
         config = true
     },
 })
+
