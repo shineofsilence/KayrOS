@@ -2,7 +2,7 @@
 local function buf_map(mode, key, rhs)
     vim.keymap.set(mode, key, rhs, { noremap = true, silent = true, nowait = true, buffer = 0 })
 end
-
+ 
 -- ==================== Горячие клавиши ====================
 local function apply_actions_binds()
     -- ============== Действия в обзорном режиме ===============
@@ -32,10 +32,10 @@ local function apply_actions_binds()
     buf_map('n', 'й', '<cmd>nohl<CR>')                -- Снять выделение поиска
 
     -- ------------------ Дерево проекта -------------------
-    buf_map('n', 'n', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
-    buf_map('n', 'т', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
-    buf_map('n', 'N', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
-    buf_map('n', 'Т', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
+    -- buf_map('n', 'n', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
+    -- buf_map('n', 'т', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
+    -- buf_map('n', '<M-n>', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
+    -- buf_map('n', '<M-т>', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
 
     -- --------------- Языковой сервер (LSP) ---------------
     buf_map('n', 'P', vim.lsp.buf.definition)         -- Перейти к определению
@@ -50,6 +50,8 @@ local function apply_actions_binds()
     buf_map('n', 'Е', vim.lsp.buf.code_action)        -- Действия
 
     -- -------------- Отмена/повтор действий ---------------
+    buf_map({'n', 'i', 'v'}, '<M-s>', '<cmd>wa<CR>')  -- Сохранить все изменения
+    buf_map({'n', 'i', 'v'}, '<M-ы>', '<cmd>wa<CR>')  -- Сохранить все изменения
     buf_map('n', 'b', 'u')                            -- Отмена действия (Undo)
     buf_map('n', 'и', 'u')                            -- Отмена действия (Undo)
     buf_map('n', 'B', '<C-r>')                        -- Повтор действия (Redo)

@@ -15,7 +15,7 @@ echo ""
 echo "🚀 Создаем контейнер '$CONTAINER_NAME' из образа $IMAGE..."
 
 # Создаем контейнер БЕЗ установки пакетов (флаг -Y подтверждает все вопросы yes)
-distrobox create -i "$IMAGE" -n "$CONTAINER_NAME" -Y --pull
+distrobox create -i "$IMAGE" -n "$CONTAINER_NAME" -Y --pull --init --nvidia
 
 if [ $? -ne 0 ]; then
     echo "❌ Ошибка при создании контейнера. Проверьте имя (может такой уже есть?)."

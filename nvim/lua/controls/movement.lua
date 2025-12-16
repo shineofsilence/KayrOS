@@ -260,7 +260,24 @@ local function visual_subword_E()
 end
 
 -- ==================== Горячие клавиши ====================
-local function apply_vertical_binds()
+local function apply_binds()
+    -- Если текущий буфер — это спец-окно, мы НЕ применяем наши бинды,
+    local ignore_filetypes = {
+        "neo-tree",
+        "TelescopePrompt",
+        "lazy",
+        "mason",
+        "toggleterm",
+        "dashboard",
+        "checkhealth"
+    }
+    if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) then
+        return
+    end
+
+    -- ------------------ Движение вправо ------------------
+    buf_map({'n', 'v'}, 'h', 'h')
+    -- ... (дальше твой обычный код) ...
     -- ------------------ Движение вправо ------------------
     buf_map({'n', 'v'}, 'h', 'h')                     -- Вправо на символ
     buf_map({'n', 'v'}, 'р', 'h')                     -- Вправо на символ
@@ -346,7 +363,7 @@ end
 vim.api.nvim_create_autocmd("BufEnter", {
     group = vim.api.nvim_create_augroup("KayMovement", { clear = true }),
     pattern = "*",
-    callback = apply_vertical_binds
+    callback = apply_binds
 })
-apply_vertical_binds()                            -- Применяем один раз сразу
+apply_binds()                            -- Применяем один раз сразу
 
