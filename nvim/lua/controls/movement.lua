@@ -264,6 +264,7 @@ local function apply_binds()
     -- Если текущий буфер — это спец-окно, мы НЕ применяем наши бинды,
     local ignore_filetypes = {
         "neo-tree",
+        "neo-tree-popup",   -- !!! ДОБАВИТЬ ЭТУ СТРОКУ !!!
         "TelescopePrompt",
         "lazy",
         "mason",

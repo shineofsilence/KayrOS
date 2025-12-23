@@ -235,6 +235,15 @@ end
 
 -- ==================== Горячие клавиши ====================
 local function apply_formatting_binds()
+    -- ------------------ Блок исключений ------------------
+    local ignore_filetypes = {
+        "neo-tree", "neo-tree-popup", "notify", "TelescopePrompt",
+        "lazy", "mason", "toggleterm", "dashboard", "checkhealth", "help", "lspinfo"
+    }
+    if vim.tbl_contains(ignore_filetypes, vim.bo.filetype) or not vim.bo.modifiable then
+        return
+    end
+    
     -- --------------- Вставка пустых строк ----------------
     hard_map('n', 'g', function() newline('below') end)             -- Пустая строка после
     hard_map('n', 'п', function() newline('below') end)             -- Пустая строка после

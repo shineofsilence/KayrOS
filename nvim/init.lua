@@ -24,6 +24,12 @@ opt.termguicolors = true                          -- Включить 24-бит�
 opt.laststatus = 3                                -- Общий статус буферов
 opt.fillchars = { vert = "│", eob = " " }         -- Оформление буферов
 opt.signcolumn = "number"                         -- Предупреждения поверх номеров строк
+opt.foldmethod = "expr"                           -- Метод сворачивания
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"  -- Исполнитель сворачивания
+opt.foldlevel = 99                                -- Открывать файлы полностью развернутыми (0 - всё свернуто)
+opt.foldlevelstart = 99                           -- Начинать с развернутого состояния
+opt.foldenable = true                             -- Включить саму возможность сворачивания
+opt.foldcolumn = "0"                              -- Не показывать лишнюю колонку слева (если хочешь видеть галочки, ставь "1")
 require('behavior.text_files')                    -- Перенос строк в текстовых файлах
 require('behavior.magnet_scroll')                 -- Магнитный горизонтальный скролл
 

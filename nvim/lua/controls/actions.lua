@@ -2,7 +2,16 @@
 local function buf_map(mode, key, rhs)
     vim.keymap.set(mode, key, rhs, { noremap = true, silent = true, nowait = true, buffer = 0 })
 end
- 
+
+-- --------- Переключатель свёрнутости функций ---------
+local function toggle_all_folds()
+    if vim.wo.foldlevel > 0 then
+        vim.cmd("normal! zM") -- Свернуть всё (устанавливает level в 0)
+    else
+        vim.cmd("normal! zR") -- Развернуть всё (устанавливает level в макс)
+    end
+end
+
 -- ==================== Горячие клавиши ====================
 local function apply_actions_binds()
     -- ============== Действия в обзорном режиме ===============
@@ -31,12 +40,6 @@ local function apply_actions_binds()
     buf_map('n', 'q', '<cmd>nohl<CR>')                -- Снять выделение поиска
     buf_map('n', 'й', '<cmd>nohl<CR>')                -- Снять выделение поиска
 
-    -- ------------------ Дерево проекта -------------------
-    -- buf_map('n', 'n', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
-    -- buf_map('n', 'т', '<C-w>w')                       -- Переключить фокус (Файл <-> Дерево)
-    -- buf_map('n', '<M-n>', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
-    -- buf_map('n', '<M-т>', '<cmd>Neotree toggle<CR>')      -- Открыть/Скрыть дерево файлов
-
     -- --------------- Языковой сервер (LSP) ---------------
     buf_map('n', 'P', vim.lsp.buf.definition)         -- Перейти к определению
     buf_map('n', 'З', vim.lsp.buf.definition)         -- Перейти к определению
@@ -48,6 +51,12 @@ local function apply_actions_binds()
     buf_map('n', 'е', vim.lsp.buf.rename)             -- Переименование
     buf_map('n', 'T', vim.lsp.buf.code_action)        -- Действия
     buf_map('n', 'Е', vim.lsp.buf.code_action)        -- Действия
+    buf_map({'n', 'i'}, '<M-m>', vim.diagnostic.open_float) -- Диагностика
+    buf_map({'n', 'i'}, '<M-ь>', vim.diagnostic.open_float) -- Диагностика
+    buf_map({'n', 'v'}, '<M-i>', 'zA')                -- Свернуть/Развернуть текущий блок
+    buf_map({'n', 'v'}, '<M-ш>', 'zA')                -- Русская Ш
+    buf_map('n', '<M-o>', toggle_all_folds)           -- Развернуть всё (Shift+Alt+i)
+    buf_map('n', '<M-щ>', toggle_all_folds)           -- Развернуть всё
 
     -- -------------- Отмена/повтор действий ---------------
     buf_map({'n', 'i', 'v'}, '<M-s>', '<cmd>wa<CR>')  -- Сохранить все изменения
